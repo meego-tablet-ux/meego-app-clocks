@@ -388,7 +388,7 @@ Window {
                                    else if(index == 1)
                                    {
                                        var map = mapToItem(scene, mouseX, mouseY);
-                                       contextMenu.model = [qsTr("Clock details"), qsTr("Set local"), qsTr("Delete clock")]
+                                       contextMenu.model = [qsTr("Edit clock"), qsTr("Make local time"), qsTr("Delete clock")]
                                        contextMenu.payload = dinstance;
                                        contextMenu.menuX = map.x;
                                        contextMenu.menuY = map.y;
@@ -397,7 +397,7 @@ Window {
                                    else if(index > 1)
                                    {
                                        var map = mapToItem(scene, mouseX, mouseY);
-                                       contextMenu.model = [qsTr("Clock details"), qsTr("Set local"), qsTr("Delete clock"), qsTr("Move to top")]
+                                       contextMenu.model = [qsTr("Edit clock"), qsTr("Make local time"), qsTr("Delete clock"), qsTr("Move to top")]
                                        contextMenu.payload = dinstance;
                                        contextMenu.menuX = map.x;
                                        contextMenu.menuY = map.y;
