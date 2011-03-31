@@ -379,7 +379,7 @@ Window {
                                    if(clockListModel.type == ClockListModel.ListofAlarms)
                                    {
                                        var map = mapToItem(scene, mouseX, mouseY);
-                                       contextMenu.model = [qsTr("Alarm Details"), qsTr("Delete Alarm"), qsTr("Move to Top")]
+                                       contextMenu.model = [qsTr("Alarm details"), qsTr("Delete alarm"), qsTr("Move to top")]
                                        contextMenu.payload = dinstance;
                                        contextMenu.menuX = map.x;
                                        contextMenu.menuY = map.y;
@@ -388,7 +388,7 @@ Window {
                                    else if(index == 1)
                                    {
                                        var map = mapToItem(scene, mouseX, mouseY);
-                                       contextMenu.model = [qsTr("Clock Details"), qsTr("Set Local"), qsTr("Delete Clock")]
+                                       contextMenu.model = [qsTr("Clock details"), qsTr("Set local"), qsTr("Delete clock")]
                                        contextMenu.payload = dinstance;
                                        contextMenu.menuX = map.x;
                                        contextMenu.menuY = map.y;
@@ -397,7 +397,7 @@ Window {
                                    else if(index > 1)
                                    {
                                        var map = mapToItem(scene, mouseX, mouseY);
-                                       contextMenu.model = [qsTr("Clock Details"), qsTr("Set Local"), qsTr("Delete Clock"), qsTr("Move to Top")]
+                                       contextMenu.model = [qsTr("Clock details"), qsTr("Set local"), qsTr("Delete clock"), qsTr("Move to top")]
                                        contextMenu.payload = dinstance;
                                        contextMenu.menuX = map.x;
                                        contextMenu.menuY = map.y;
