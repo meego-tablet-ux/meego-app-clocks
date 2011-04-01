@@ -125,21 +125,18 @@ void ClockListModel::setType(const int type)
 
         if(!settings.contains("firstuse"))
         {
-            KSystemTimeZones zones;
-            KTimeZones *temp = zones.timeZones();
-            QMap<QString, KTimeZone> map = temp->zones();
-            QList<KTimeZone> zoneList = map.values();
-
-            int idx1 = rand() % zoneList.count();
-            int idx2 = rand() % zoneList.count();
+            QStringList defaultzones;
+            defaultzones << "Europe/London"
+                         << "America/Los_Angeles"
+                         << "Asia/Shanghai";
             settings.setValue("firstuse", "false");
             settings.beginGroup("clocks");
-            settings.setValue("001/name", cleanTZName(zoneList[idx1].name()));
-            settings.setValue("001/title", zoneList[idx1].name());
-            settings.setValue("001/gmt", zoneList[idx1].currentOffset(Qt::UTC)/3600);
-            settings.setValue("002/name", cleanTZName(zoneList[idx2].name()));
-            settings.setValue("002/title", zoneList[idx2].name());
-            settings.setValue("002/gmt", zoneList[idx2].currentOffset(Qt::UTC)/3600);
+            for (int i = 0; i < defaultzones.size(); i++) {
+                KTimeZone zone = KSystemTimeZones::zone(defaultzones[i]);
+                settings.setValue(QString("%1/name").arg(i+1), cleanTZName(zone.name()));
+                settings.setValue(QString("%1/title").arg(i+1), zone.name());
+                settings.setValue(QString("%1/gmt").arg(i+1), zone.currentOffset(Qt::UTC)/3600);
+            }
             settings.endGroup();
         }
 
