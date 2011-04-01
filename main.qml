@@ -142,15 +142,11 @@ Window {
             disableSearch: true
 
             menuContent: Item {
-                width:  button.width + 20
-                height: button.height + 45
-                Button {
-                    id: button
-                    title: (buttonval == 0)?qsTr("New alarm"):qsTr("New clock")
-                    color: theme_buttonFontColor
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    onClicked: {
+                width: childrenRect.width
+                height: childrenRect.height
+                ActionMenu {
+                    model: [(buttonval == 0)?qsTr("New alarm"):qsTr("New clock")]
+                    onTriggered: {
                         editting = undefined;
                         if(buttonval == 0)
                             addAlarmMenu.visible = true;
