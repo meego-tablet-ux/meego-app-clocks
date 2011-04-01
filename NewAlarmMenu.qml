@@ -21,22 +21,13 @@ Item {
 
     property int itemHeight: 50
     property variant weekday: [
-        "image://theme/clock/btn_Mo_up",
-        "image://theme/clock/btn_Tu_up",
-        "image://theme/clock/btn_We_up",
-        "image://theme/clock/btn_Th_up",
-        "image://theme/clock/btn_Fr_up",
-        "image://theme/clock/btn_Sa_up",
-        "image://theme/clock/btn_Su_up"
-    ]
-    property variant weekdayon: [
-        "image://theme/clock/btn_Mo_dn",
-        "image://theme/clock/btn_Tu_dn",
-        "image://theme/clock/btn_We_dn",
-        "image://theme/clock/btn_Th_dn",
-        "image://theme/clock/btn_Fr_dn",
-        "image://theme/clock/btn_Sa_dn",
-        "image://theme/clock/btn_Su_dn"
+        qsTr("Mo"),
+        qsTr("Tu"),
+        qsTr("We"),
+        qsTr("Th"),
+        qsTr("Fr"),
+        qsTr("Sa"),
+        qsTr("Su")
     ]
     property variant onoroff: [qsTr("On"), qsTr("Off")]
     property variant soundtypeval: [qsTr("sound"), qsTr("track")]
@@ -367,18 +358,22 @@ Item {
                             width: parent.width/7
                             height: parent.height
                             anchors.top: parent.top
-                            Image {
+                            Text {
                                 anchors.centerIn: parent
-                                source: (days&(0x1 << index))?weekdayon[index]:weekday[index]
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        menu.outsideClick();
-                                        if(days&(0x1 << index))
-                                            days &= ~(0x1 << index)
-                                        else
-                                            days |= (0x1 << index)
-                                    }
+                                text: weekday[index]
+                                font.pixelSize: 26
+                                color: "white"
+                                style: Text.Outline
+                                styleColor: (days&(0x1 << index))?"#AACCFF":"black"
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    menu.outsideClick();
+                                    if(days&(0x1 << index))
+                                        days &= ~(0x1 << index)
+                                    else
+                                        days |= (0x1 << index)
                                 }
                             }
                         }
