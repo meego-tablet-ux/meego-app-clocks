@@ -7,7 +7,7 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.Media 0.1
 import MeeGo.App.Clocks 0.1
 import "functions.js" as Code
@@ -219,7 +219,7 @@ Item {
                         height: 160
                         anchors.right: parent.right
                         anchors.top:  timeselection.bottom
-                        TimePicker {
+                        Labs.TimePicker {
                             id: timePicker
                             property bool showing: false
                             property int xVal:0
@@ -930,7 +930,7 @@ Item {
                     width: parent.width - 40
                     height: parent.height
                     anchors.centerIn: parent
-                    Button {
+                    Labs.Button {
                         id: saveButton
                         height: 68
                         width: 208
@@ -951,7 +951,7 @@ Item {
                             }
                         }
                     }
-                    Button {
+                    Labs.Button {
                         id: cancelButton
                         height: 68
                         width: 208

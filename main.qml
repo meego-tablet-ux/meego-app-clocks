@@ -7,12 +7,12 @@
  */
 
 import Qt 4.7
-import MeeGo.Labs.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Clocks 0.1
 
 import "functions.js" as Code
 
-Window {
+Labs.Window {
     id: scene
     filterModel: [qsTr("Clocks"), qsTr("Alarms")]
     applicationPage: myApp
@@ -55,7 +55,7 @@ Window {
     property string itemtodelete;
     Component {
         id: verifyDelete
-        ModalDialog {
+        Labs.ModalDialog {
             leftButtonText: qsTr("no")
             rightButtonText: qsTr("yes")
             dialogTitle: qsTr("Are you sure you want to delete?")
@@ -74,7 +74,7 @@ Window {
         showModalDialog(verifyDelete);
     }
 
-    ContextMenu {
+    Labs.ContextMenu {
         id: contextMenu
         onTriggered: {
             if (index == 0)
@@ -135,7 +135,7 @@ Window {
 
     Component {
         id: myApp
-        ApplicationPage {
+        Labs.ApplicationPage {
             id: myPage
             anchors.fill: parent
             title: qsTr("Clocks")
@@ -144,7 +144,7 @@ Window {
             menuContent: Item {
                 width: childrenRect.width
                 height: childrenRect.height
-                ActionMenu {
+                Labs.ActionMenu {
                     model: [(buttonval == 0)?qsTr("New alarm"):qsTr("New clock")]
                     onTriggered: {
                         editting = undefined;
@@ -157,7 +157,7 @@ Window {
                 }
             }
 
-            ModalSurface {
+            Labs.ModalSurface {
                 id: addAlarmMenu
                 autoCenter: true
                 content: NewAlarmMenu {
@@ -172,7 +172,7 @@ Window {
                 }
             }
 
-            ModalSurface {
+            Labs.ModalSurface {
                 id: addClockMenu
                 autoCenter: true
                 content: NewClockMenu {
