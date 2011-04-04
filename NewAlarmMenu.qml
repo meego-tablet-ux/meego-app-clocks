@@ -7,6 +7,7 @@
  */
 
 import Qt 4.7
+import MeeGo.Components 0.1
 import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.Media 0.1
 import MeeGo.App.Clocks 0.1
@@ -261,51 +262,11 @@ Item {
                     }
                 }
 
-                Image {
-                    id: onoffswitch
+                ToggleButton {
                     anchors.right: parent.right
-                    anchors.top: parent.top
-                    source: "image://theme/clock/bg_switch_bg"
-                    Repeater {
-                        model: 2
-                        Item {
-                            x: index * onoffswitch.width/2
-                            anchors.top: parent.top
-                            width: onoffswitch.width/2
-                            height: parent.height
-                            Text {
-                                anchors.fill: parent
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                                text: onoroff[index]
-                                font.pixelSize: theme_fontPixelSizeLarge
-                                color: "white"
-                            }
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    menu.outsideClick();
-                                    active = !index;
-                                }
-                            }
-                        }
-                    }
-                    Image {
-                        id: btnimage
-                        x: (active?0:1) * onoffswitch.width/2
-                        anchors.top: parent.top
-                        width: onoffswitch.width/2
-                        height: parent.height
-                        source: (active)?"image://theme/clock/btn_switch_on":"image://theme/clock/btn_switch_off"
-                        Text {
-                            anchors.fill: parent
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
-                            text: onoroff[(active?0:1)]
-                            font.pixelSize: theme_fontPixelSizeLarge
-                            color: theme_buttonFontColor
-                        }
-                    }
+                    anchors.verticalCenter: parent.verticalCenter
+                    on: active
+                    onToggled: active = on;
                 }
             }
             /* alarm time, switch rect end */

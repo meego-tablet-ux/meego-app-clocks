@@ -7,6 +7,7 @@
  */
 
 import Qt 4.7
+import MeeGo.Components 0.1
 
 import "functions.js" as Code
 
@@ -84,52 +85,13 @@ Item {
         anchors.top: (landscape)?backgroundDay.bottom:undefined
         anchors.horizontalCenter: (landscape)?backgroundDay.horizontalCenter:undefined
         visible: minimal == false
-        Image {
-            id: onoffswitch
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            source: "image://theme/clock/bg_switch_bg"
-            Repeater {
-                model: 2
-                Item {
-                    x: index * onoffswitch.width/2
-                    anchors.top: parent.top
-                    width: onoffswitch.width/2
-                    height: parent.height
-                    Text {
-                        anchors.fill: parent
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        text: onoroff[index]
-                        font.pixelSize: theme_fontPixelSizeLarge
-                        color: theme_buttonFontColor
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            if(alarmActive != !index)
-                            {
-                                alarmActive = !index;
-                                alarm.triggered(alarmActive);
-                            }
-                        }
-                    }
-                }
-            }
-            Image {
-                id: btnimage
-                x: (alarmActive?0:1) * onoffswitch.width/2
-                anchors.top: parent.top
-                width: onoffswitch.width/2
-                height: parent.height
-                source: (alarmActive)?"image://theme/clock/btn_switch_on":"image://theme/clock/btn_switch_off"
-                Text {
-                    anchors.fill: parent
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    text: onoroff[(alarmActive?0:1)]
-                    font.pixelSize: theme_fontPixelSizeLarge
-                    color: theme_buttonFontColor
+        ToggleButton {
+            anchors.centerIn: parent
+            on: alarmActive
+            onToggled: {
+                if(alarmActive != on) {
+                    alarmActive = on;
+                    alarm.triggered(alarmActive);
                 }
             }
         }
