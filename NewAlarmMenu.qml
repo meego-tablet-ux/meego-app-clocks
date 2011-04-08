@@ -133,7 +133,6 @@ Item {
         source: "image://theme/clock/bg_clock_panel_editing_l"
         function outsideClick()
         {
-            timePicker.showing = false;
             snoozefield.activate = false;
             typefield.activate = false;
             soundfield.activate = false;
@@ -220,28 +219,12 @@ Item {
                         height: 160
                         anchors.right: parent.right
                         anchors.top:  timeselection.bottom
-                        Labs.TimePicker {
+                        TimePicker {
                             id: timePicker
-                            property bool showing: false
-                            property int xVal:0
-                            property int yVal:0
-                            onShowingChanged: {
-                                if(showing)
-                                {
-                                    hours = hour;
-                                    minutes = minute;
-                                    timePicker.setValues();
-                                    timePicker.show(xVal,yVal);
-                                    //timePicker.visible = true;
-                                }
-                                else
-                                {
-                                    timePicker.visible = false;
-                                }
-                            }
-
-                            hr24: true;
-                            onTimeChanged: {
+                            hr24: true
+                            hours: hour
+                            minutes: minute
+                            onAccepted: {
                                 hour = hours;
                                 minute = minutes;
                             }
@@ -251,9 +234,7 @@ Item {
                         anchors.fill: parent
                         onClicked: {
                             var map = mapToItem(scene.content,mouseX,mouseY);
-                            timePicker.xVal = map.x;
-                            timePicker.yVal = map.y;
-                            timePicker.showing = !timePicker.showing;
+                            timePicker.show();
                             clockrect.z = 10;
                             snoozerect.z = 0;
                             soundtypeselectrect.z = 0;
