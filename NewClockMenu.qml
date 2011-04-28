@@ -8,6 +8,7 @@
 
 import Qt 4.7
 import MeeGo.Labs.Components 0.1 as Labs
+import MeeGo.Components 0.1
 import MeeGo.App.Clocks 0.1
 
 Item {
@@ -141,7 +142,7 @@ Item {
                 width: timezones.width
                 height: parent.height
                 anchors.centerIn: parent
-                Labs.Button {
+                Button {
                     id: saveButton
                     height: 68
                     width: 208
@@ -150,9 +151,8 @@ Item {
                     active: ((tzlistmodel.currentItem != undefined)&&(inputElement.displayText != ""))
                     bgSourceUp: "image://theme/btn_blue_up"
                     bgSourceDn: "image://theme/btn_blue_dn"
-                    title: qsTr("Save")
+                    text: qsTr("Save")
                     font.pixelSize: theme_fontPixelSizeLarge
-                    color: theme_buttonFontColor
                     onClicked: {
                         if((tzlistmodel.currentItem != undefined)&&(inputElement.displayText != ""))
                         {
@@ -161,7 +161,7 @@ Item {
                         }
                     }
                 }
-                Labs.Button {
+                Button {
                     id: cancelButton
                     height: 68
                     width: 208
@@ -169,9 +169,8 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     bgSourceUp: "image://theme/btn_red_up"
                     bgSourceDn: "image://theme/btn_red_dn"
-                    title: qsTr("Cancel")
+                    text: qsTr("Cancel")
                     font.pixelSize: theme_fontPixelSizeLarge
-                    color: theme_buttonFontColor
                     onClicked: {
                         container.close();
                     }

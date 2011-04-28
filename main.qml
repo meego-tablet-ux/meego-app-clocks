@@ -8,6 +8,7 @@
 
 import Qt 4.7
 import MeeGo.Labs.Components 0.1 as Labs
+import MeeGo.Components 0.1
 import MeeGo.App.Clocks 0.1
 
 import "functions.js" as Code
@@ -53,25 +54,20 @@ Labs.Window {
     }
 
     property string itemtodelete;
-    Component {
+    ModalDialog {
         id: verifyDelete
-        Labs.ModalDialog {
-            leftButtonText: qsTr("no")
-            rightButtonText: qsTr("yes")
-            dialogTitle: qsTr("Are you sure you want to delete?")
-            onDialogClicked: {
-                if(button == 2)
-                    clockListModel.destroyItemByID(itemtodelete);
-                dialogLoader.sourceComponent = undefined;
-                itemtodelete = "";
-            }
+        acceptButtonText: qsTr("yes")
+        cancelButtonText: qsTr("no")
+        title: qsTr("Are you sure you want to delete?")
+        onAccepted: {
+            clockListModel.destroyItemByID(itemtodelete);
         }
     }
 
     function deleteitem(itemid)
     {
         itemtodelete = itemid;
-        showModalDialog(verifyDelete);
+        verifyDelete.show();
     }
 
     Labs.ContextMenu {
