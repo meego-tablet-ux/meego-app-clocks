@@ -10,65 +10,112 @@ import Qt 4.7
 import MeeGo.Components 0.1
 import MeeGo.App.Clocks 0.1
 
-Rectangle {
+Item {
     id: clockTile
 
     property alias gmt: clock.gmt
     property string city: ""
+    clip: true
 
-    color: "white" //TODO: get color from theme
+    Rectangle {
+        id: header
+        color: content.visible ? "#eaf6fb" : "white"
 
-    Clock {
-        id: clock
-        anchors.margins: 20
+        Clock {
+            id: clock
+            anchors.margins: 20
+        }
+
+        Column {
+            id: label
+            spacing: 5
+            anchors.margins: 20
+            Text {
+                id: timeLabel
+                font.pixelSize: 20
+                color: theme_buttonFontColorActive
+                //FIXME: calculate day of week
+                text: "11:30 Wednesday"
+            }
+            Text {
+                id: cityLabel
+                font.pixelSize: 18
+                text: city
+            }
+            Text {
+                id: gmtLabel
+                font.pixelSize: 16
+                text: qsTr("(GMT %1%2)").arg(gmt>=0?"+":"").arg(gmt)
+            }
+        }
+
+        Image {
+            id: dragHandle
+            anchors.margins: 40
+            source: "image://themedimage/widgets/common/drag-handle/drag-handle"
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: { console.log("pressed") }
+            onReleased: { console.log("released") }
+            onClicked: {
+                console.log("clicked");
+                content.visible = !content.visible;
+            }
+            onCanceled: { console.log("canceled") }
+            onPressAndHold: { console.log("pressandhold") }
+        }
+
     }
 
-    Column {
-        id: label
-        spacing: 5
-        anchors.margins: 20
-        Text {
-            id: timeLabel
-            font.pixelSize: 20
-            color: theme_buttonFontColorActive
-            //FIXME: calculate day of week
-            text: "11:30 Wednesday"
-        }
-        Text {
-            id: cityLabel
-            font.pixelSize: 18
-            text: city
-        }
-        Text {
-            id: gmtLabel
-            font.pixelSize: 16
-            text: qsTr("(GMT %1%2)").arg(gmt>=0?"+":"").arg(gmt)
-        }
+    Rectangle {
+        id: content
+        color: "#eaf6fb"
+        visible: false
     }
 
-    Image {
-        id: dragHandle
-        anchors.margins: 40
-        source: "image://themedimage/widgets/common/drag-handle/drag-handle"
+    Behavior on width {
+        SequentialAnimation {
+            PropertyAnimation { duration: 150 }
+            ScriptAction { script: if (content.visible) ListView.view.positionViewAtIndex(index, ListView.Center); }
+        }
     }
-
-    MouseArea {
-        anchors.fill: parent
-        onPressed: { console.log("pressed") }
-        onReleased: { console.log("released") }
-        onClicked: { console.log("clicked") }
-        onCanceled: { console.log("canceled") }
-        onPressAndHold: { console.log("pressandhold") }
+    Behavior on height {
+        SequentialAnimation {
+            PropertyAnimation { duration: 150 }
+            ScriptAction { script: if (content.visible) ListView.view.positionViewAtIndex(index, ListView.Center); }
+        }
     }
 
     states: [
         State {
             name: "landscape"
-            when: window.inLandscape
+            when: window.inLandscape || window.inInvertedLandscape
             PropertyChanges {
                 target: clockTile
+                width: header.width + (content.visible ? content.width : 0)
+                height: listview.height
+            }
+            PropertyChanges {
+                target: header
                 width: 189
                 height: listview.height
+            }
+            PropertyChanges {
+                target: content
+                width: 505
+                height: listview.height
+            }
+            AnchorChanges {
+                target: header
+                anchors.top: parent.top
+                anchors.left: parent.left
+            }
+            AnchorChanges {
+                target: content
+                anchors.top: parent.top
+                anchors.left: header.right
             }
             AnchorChanges {
                 target: clock
@@ -89,11 +136,31 @@ Rectangle {
         },
         State {
             name: "portrait"
-            when: window.inPortrait
+            when: window.inPortrait || window.inInvertedPortrait
             PropertyChanges {
                 target: clockTile
                 width: listview.width
+                height: header.height + (content.visible ? content.height : 0)
+            }
+            PropertyChanges {
+                target: header
+                width: listview.width
                 height: 164
+            }
+            PropertyChanges {
+                target: content
+                width: listview.width
+                height: 290
+            }
+            AnchorChanges {
+                target: header
+                anchors.top: parent.top
+                anchors.left: parent.left
+            }
+            AnchorChanges {
+                target: content
+                anchors.top: header.bottom
+                anchors.left: parent.left
             }
             AnchorChanges {
                 target: clock

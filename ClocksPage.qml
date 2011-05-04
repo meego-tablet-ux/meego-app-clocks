@@ -45,7 +45,7 @@ AppPage {
             states: [
                 State {
                     name: "landscape"
-                    when: window.inLandscape
+                    when: window.inLandscape || window.inInvertedLandscape
                     PropertyChanges {
                         target: listview
                         anchors { leftMargin: 0; rightMargin: 0;
@@ -55,7 +55,7 @@ AppPage {
                 },
                 State {
                     name: "portrait"
-                    when: window.inPortrait
+                    when: window.inPortrait || window.inInvertedPortrait
                     PropertyChanges {
                         target: listview
                         anchors { leftMargin: 10; rightMargin: 10;
