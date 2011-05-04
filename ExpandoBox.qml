@@ -14,8 +14,10 @@ import Qt 4.7
 Item {
     id: root
 
-    property alias headerComponent: headerLoader.sourceComponent
-    property alias detailsComponent: detailsLoader.sourceComponent
+    property Component headerComponent: null
+    property Item headerItem: null
+    property Component detailsComponent: null
+    property Item detailsItem: null
     property string orientation: "horizontal"
     property alias expanded: details.visible
     property color bgColorExpanded: "#eaf6fb"
@@ -25,16 +27,26 @@ Item {
     height: orientation == "vertical" ? parent.height : header.height
     clip: true
 
+    onHeaderComponentChanged: {
+        if (headerItem) headerItem.destroy();
+        headerItem = headerComponent.createObject(header);
+    }
+
+    onStateChanged: {
+        if (state == "expanded")
+            detailsItem = detailsComponent.createObject(details);
+        else if (detailsItem)
+            detailsItem.destroy();
+    }
+
     Rectangle {
         id: header
 
         anchors.top: parent.top
         anchors.left: parent.left
-        width: headerLoader.width
-        height: headerLoader.height
+        width: headerItem.width
+        height: headerItem.height
         color: expanded ? bgColorExpanded : bgColorCollapsed
-
-        Loader { id: headerLoader }
 
         MouseArea {
             anchors.fill: parent
@@ -48,12 +60,11 @@ Item {
 
         anchors.top: orientation == "vertical" ? parent.top : header.bottom
         anchors.left: orientation == "vertical" ? header.right : parent.left
-        width: detailsLoader.width
-        height: detailsLoader.height
+        // avoid warnings when detailsItem gets destroyed
+        width: detailsItem ? detailsItem.width : 0
+        height: detailsItem ? detailsItem.height : 0
         color: bgColorExpanded
         visible: false
-
-        Loader { id: detailsLoader }
     }
 
     states: State {

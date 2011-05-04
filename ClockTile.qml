@@ -59,10 +59,37 @@ ExpandoBox {
     }
 
     detailsComponent: Component {
-        Rectangle { 
-            color: "blue"
+        Item { 
             width: root.orientation == "vertical" ? 505 : listview.width
             height: root.orientation == "vertical" ? listview.height : 290
+            Item {
+                anchors.fill: parent
+                anchors.margins: 5
+                Rectangle {
+                    id: detailsBox
+                    anchors { top: parent.top; left: parent.left; right: parent.right; bottom: buttonRow.top }
+                    color: "#d5ecf6"
+                    Text {
+                        id: locLabel
+                        anchors { top: parent.top; left: parent.left }
+                        anchors { margins: 20 }
+                        text: qsTr("Choose location:")
+                    }
+                    TextEntry {
+                        id: locEntry
+                        anchors { top: parent.top; left: locLabel.right; right: parent.right }
+                        anchors { margins: 10 }
+                    }
+                }
+                Row {
+                    id: buttonRow
+                    height: 66
+                    anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
+                    Button { text: qsTr("Save") }
+                    Button { text: qsTr("Cancel") }
+                    Button { text: qsTr("Delete") }
+                }
+            }
         }
     }
 
