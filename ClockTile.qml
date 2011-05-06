@@ -52,7 +52,7 @@ ExpandoBox {
                 Text {
                     id: gmtLabel
                     font.pixelSize: 16
-                    text: qsTr("(GMT %1%2)").arg(gmt>=0?"+":"").arg(gmt)
+                    text: qsTr("(GMT %1%2)").arg(gmt<0?"":"+").arg(gmt)
                 }
             }
         }
@@ -71,23 +71,61 @@ ExpandoBox {
                     color: "#d5ecf6"
                     Text {
                         id: locLabel
-                        anchors { top: parent.top; left: parent.left }
+                        anchors { verticalCenter: locEntry.verticalCenter; left: parent.left }
                         anchors { margins: 20 }
+                        color: theme_fontColorMedium
+                        font.pixelSize: 16
                         text: qsTr("Choose location:")
                     }
                     TextEntry {
                         id: locEntry
-                        anchors { top: parent.top; left: locLabel.right; right: parent.right }
-                        anchors { margins: 10 }
+                        anchors { top: parent.top; left: parent.left; right: parent.right }
+                        anchors { leftMargin: 166; topMargin: 10 }
+                        font.pixelSize: 18
+                        anchors.rightMargin: root.orientation == "vertical" ? 10 : 75
+                        onTextChanged: timezoneList.filter(text)
+                    }
+                    TimezoneList {
+                        id: timezoneList
+                        anchors { top: locEntry.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
+                        anchors.leftMargin: 167 
+                        anchors.rightMargin: root.orientation == "vertical" ? 11 : 76
+                        anchors.bottomMargin: 10
                     }
                 }
                 Row {
                     id: buttonRow
                     height: 66
                     anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
-                    Button { text: qsTr("Save") }
-                    Button { text: qsTr("Cancel") }
-                    Button { text: qsTr("Delete") }
+                    anchors { leftMargin: 166 }
+                    anchors.rightMargin: root.orientation == "vertical" ? 10 : 75
+                    spacing: 10
+                    Button {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width/3 - 6
+                        height: 45
+                        font.pixelSize: 18
+                        bgSourceUp: "image://themedimage/widgets/common/button/button-default"
+                        bgSourceDn: "image://themedimage/widgets/common/button/button-default-pressed"
+                        text: qsTr("Save")
+                    }
+                    Button {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width/3 - 6
+                        height: 45
+                        font.pixelSize: 18
+                        text: qsTr("Cancel")
+                        onClicked: expanded = false
+                    }
+                    Button {
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width/3 - 6
+                        height: 45
+                        font.pixelSize: 18
+                        bgSourceUp: "image://themedimage/widgets/common/button/button-negative"
+                        bgSourceDn: "image://themedimage/widgets/common/button/button-negative-pressed"
+                        text: qsTr("Delete")
+                    }
                 }
             }
         }
