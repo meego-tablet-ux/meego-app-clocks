@@ -17,8 +17,43 @@ AppPage {
     actionMenuPayload: [1]
     onActionMenuTriggered: {
         if (selectedItem == 1) {
-            //FIXME: open new clock dialog
+            locEntry.text = "";
+            newClockDialog.show();
         }
+    }
+
+    ModalDialog {
+        id: newClockDialog
+        width: 540 + 10
+        height: 260 + 150
+        title: qsTr("Add new clock")
+        acceptButtonText: qsTr("Save")
+        cancelButtonText: qsTr("Cancel")
+        content: Item {
+            anchors.fill: parent
+            Text {
+                id: locLabel
+                anchors { verticalCenter: locEntry.verticalCenter; left: parent.left }
+                anchors { margins: 20 }
+                color: theme_fontColorMedium
+                font.pixelSize: 16
+                text: qsTr("Choose location:")
+            }
+            TextEntry {
+                id: locEntry
+                anchors { top: parent.top; left: parent.left; right: parent.right }
+                anchors { leftMargin: 166; topMargin: 35; rightMargin: 35 }
+                font.pixelSize: 18
+                onTextChanged: timezoneList.filter(text)
+            }
+            TimezoneList {
+                id: timezoneList
+                anchors { top: locEntry.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
+                anchors { leftMargin: 167; rightMargin: 36; bottomMargin: 30 }
+            }
+        }
+        // FIXME
+        //onAccepted: doSomething()
     }
 
     Rectangle {

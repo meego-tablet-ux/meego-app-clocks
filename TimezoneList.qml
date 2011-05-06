@@ -46,16 +46,16 @@ Rectangle {
                     anchors.baseline: parent.verticalCenter
                     anchors.baselineOffset: 6
                     anchors.left: parent.left
-                    anchors.leftMargin: 15
+                    anchors.leftMargin: 14
                     color: theme_fontColorMedium
                     font.pixelSize: 18
-                    text: qsTr("%1, %2").arg(city).arg(countrycode)
+                    text: title
                 }
                 Text {
                     anchors.baseline: parent.verticalCenter
                     anchors.baselineOffset: 6
                     anchors.right: parent.right
-                    anchors.rightMargin: 15
+                    anchors.rightMargin: 14
                     color: theme_fontColorMedium
                     font.pixelSize: 14
                     text: qsTr("(GMT %1%2)").arg(gmtoffset<0?"":"+").arg(gmtoffset)
@@ -63,6 +63,7 @@ Rectangle {
                 MouseArea {
                     id: mouseArea
                     anchors.fill: parent
+                    onClicked: locEntry.text = title
                 }
             }
         }
