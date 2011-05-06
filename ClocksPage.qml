@@ -52,8 +52,12 @@ AppPage {
                 anchors { leftMargin: 167; rightMargin: 36; bottomMargin: 30 }
             }
         }
-        // FIXME
-        //onAccepted: doSomething()
+        onAccepted: {
+            if ((timezoneList.currentItem != undefined)
+                && (locEntry.text != "")) {
+                clockListModel.addClock(timezoneList.currentItem.selectedname, timezoneList.currentItem.selectedtitle, timezoneList.currentItem.selectedgmt);
+            }
+        }
     }
 
     Rectangle {
@@ -66,16 +70,18 @@ AppPage {
             anchors.fill: parent
             spacing: 2
 
-            model: 24 //FIXME: use real model here
+            ClockListModel {
+                id: clockListModel
+                type: ClockListModel.ListofClocks
+            }
+
+            model: clockListModel
 
             //spacers to create illusion of 10px border at ends
-            header: Component { Item { width: 10; height: 10 } }
-            footer: Component { Item { width: 10; height: 10 } }
+            header: Item { width: 10; height: 10 }
+            footer: Item { width: 10; height: 10 }
 
-            delegate: Component {
-                // FIXME: populate with data from model
-                ClockTile { gmt: index - 12; city: "London, UK" }
-            }
+            delegate: ClockTile { gmt: gmtoffset; city: name }
 
             states: [
                 State {

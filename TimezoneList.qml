@@ -10,6 +10,8 @@ import Qt 4.7
 import MeeGo.Labs.Components 0.1 as Labs
 
 Rectangle {
+    property alias currentItem: listView.currentItem
+
     color: "white"
 
     function filter(arg) { timezoneListModel.filterOut(arg); }
@@ -26,44 +28,53 @@ Rectangle {
     }
 
     ListView {
+        id: listView
         anchors.fill: parent
         model: timezoneListModel
         clip: true
 
-        delegate: Component {
-            BorderImage {
-                id: borderImage
-                source: {
-                    if (index == timezoneListModel.count - 1)
-                        return mouseArea.pressed ? "image://themedimage/widgets/common/list/list-single-active" : "image://themedimage/widgets/common/list/list-single-inactive";
-                    else
-                        return mouseArea.pressed ? "image://themedimage/widgets/common/list/list-active" : "image://themedimage/widgets/common/list/list-inactive";
-                }
-                border { top: 2; bottom: 2; left: 1; right: 1 }
-                width: parent.width
-                height: 40
-                Text {
-                    anchors.baseline: parent.verticalCenter
-                    anchors.baselineOffset: 6
-                    anchors.left: parent.left
-                    anchors.leftMargin: 14
-                    color: theme_fontColorMedium
-                    font.pixelSize: 18
-                    text: title
-                }
-                Text {
-                    anchors.baseline: parent.verticalCenter
-                    anchors.baselineOffset: 6
-                    anchors.right: parent.right
-                    anchors.rightMargin: 14
-                    color: theme_fontColorMedium
-                    font.pixelSize: 14
-                    text: qsTr("(GMT %1%2)").arg(gmtoffset<0?"":"+").arg(gmtoffset)
-                }
-                MouseArea {
-                    id: mouseArea
-                    anchors.fill: parent
-                    onClicked: locEntry.text = title
+        delegate: BorderImage {
+            id: borderImage
+
+            // these are used to propagate data to the
+            // create/edit clocks logic
+            property int selectedgmt: gmtoffset
+            property string selectedname: city
+            property string selectedtitle: title
+
+            source: {
+                if (index == timezoneListModel.count - 1)
+                    return mouseArea.pressed ? "image://themedimage/widgets/common/list/list-single-active" : "image://themedimage/widgets/common/list/list-single-inactive";
+                else
+                    return mouseArea.pressed ? "image://themedimage/widgets/common/list/list-active" : "image://themedimage/widgets/common/list/list-inactive";
+            }
+            border { top: 2; bottom: 2; left: 1; right: 1 }
+            width: parent.width
+            height: 40
+            Text {
+                anchors.baseline: parent.verticalCenter
+                anchors.baselineOffset: 6
+                anchors.left: parent.left
+                anchors.leftMargin: 14
+                color: theme_fontColorMedium
+                font.pixelSize: 18
+                text: title
+            }
+            Text {
+                anchors.baseline: parent.verticalCenter
+                anchors.baselineOffset: 6
+                anchors.right: parent.right
+                anchors.rightMargin: 14
+                color: theme_fontColorMedium
+                font.pixelSize: 14
+                text: qsTr("(GMT %1%2)").arg(gmtoffset<0?"":"+").arg(gmtoffset)
+            }
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                onClicked: {
+                    listView.currentIndex = index;
+                    locEntry.text = title;
                 }
             }
         }
