@@ -58,6 +58,8 @@ Rectangle {
                 anchors.leftMargin: 14
                 color: theme_fontColorMedium
                 font.pixelSize: 18
+                elide: Text.ElideRight
+                width: parent.width - 100
                 text: title
             }
             Text {
