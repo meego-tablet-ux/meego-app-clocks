@@ -55,9 +55,23 @@ AppPage {
         onAccepted: {
             if ((timezoneList.currentItem != undefined)
                 && (locEntry.text != "")) {
-                clockListModel.addClock(timezoneList.currentItem.selectedname, timezoneList.currentItem.selectedtitle, timezoneList.currentItem.selectedgmt);
+                if (!clockListModel.addClock(timezoneList.currentItem.selectedname, timezoneList.currentItem.selectedtitle, timezoneList.currentItem.selectedgmt)) {
+                    dupeDialog.city = timezoneList.currentItem.selectedname;
+                    dupeDialog.show();
+                }
             }
         }
+    }
+
+    ModalMessageBox {
+        id: dupeDialog
+        property string city
+        width: 400
+        height: 250
+        title: qsTr("Error")
+        text: qsTr("You've already got a clock for %1.").arg(city)
+        showAcceptButton: false
+        cancelButtonText: qsTr("Cancel")
     }
 
     Rectangle {

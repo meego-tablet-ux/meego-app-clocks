@@ -223,12 +223,20 @@ bool ClockListModel::getClock(const QString &id, ClockItem *&item, int &idx)
     return true;
 }
 
-void ClockListModel::addClock(const QString &name, const QString &title, const int gmt)
+bool ClockListModel::addClock(const QString &name, const QString &title, const int gmt)
 {
     if(m_type != ListofClocks)
     {
         qDebug() << "Can only add clocks to ListofClocks type";
-        return;
+        return true;
+    }
+
+    // search for duplicate clock
+    ClockItem *clock;
+    foreach (clock, itemsList) {
+        if (clock->m_title == title) {
+            return false;
+        }
     }
 
     beginInsertRows(QModelIndex(), itemsList.count(), itemsList.count());
@@ -243,6 +251,7 @@ void ClockListModel::addClock(const QString &name, const QString &title, const i
     settings.setValue("gmt", gmt);
     settings.endGroup();
     emit countChanged(itemsList.count());
+    return true;
 }
 
 QString ClockListModel::calendarAlarm(const QString &name, const int days,

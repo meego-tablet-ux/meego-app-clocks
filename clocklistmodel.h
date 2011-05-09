@@ -54,7 +54,7 @@ public:
 
 public slots:
     void destroyItemByID(const QString &id);
-    void addClock(const QString &name, const QString &title, const int gmt);
+    bool addClock(const QString &name, const QString &title, const int gmt);
     void addAlarm(const QString &name, const int days,
                   const int soundtype, const QString &soundname, const QString &soundfile,
                   const int snooze, const bool active,
