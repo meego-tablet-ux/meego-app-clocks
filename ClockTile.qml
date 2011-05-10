@@ -36,12 +36,11 @@ ExpandoBox {
             anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
             anchors.margins: 20
             spacing: 5
-            Text {
+            TimeDayText {
                 id: timeLabel
                 font.pixelSize: 20
                 color: theme_buttonFontColorActive
-                //FIXME: calculate day of week
-                text: "11:30 Wednesday"
+                tz: root.gmt
             }
             Text {
                 id: cityLabel
