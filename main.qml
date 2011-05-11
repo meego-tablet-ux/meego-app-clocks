@@ -12,6 +12,11 @@ import MeeGo.App.Clocks 0.1
 
 Window {
     id: window
+
+    // simplify orientation code
+    property bool isLandscape: inLandscape || inInvertedLandscape
+    property bool isPortrait: inPortrait || inInvertedPortrait
+
     showToolBarSearch: false
 
     bookMenuModel: [qsTr("Clocks"), qsTr("Alarms")]
@@ -19,5 +24,4 @@ Window {
     Component { id: clocksPage; ClocksPage {} }
     Component { id: alarmsPage; AlarmsPage {} }
     Component.onCompleted: { switchBook(clocksPage) }
-
 }

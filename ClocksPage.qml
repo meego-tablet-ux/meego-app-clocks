@@ -77,12 +77,17 @@ AppPage {
     Rectangle {
         anchors.fill: parent
         color: "#EEEEEE" //TODO: get color from theme
-        clip: true  //needed to prevent list from scrolling over titlebar
+        clip: true
         ListView {
             id: listview
 
             anchors.fill: parent
+            anchors.topMargin: window.isLandscape ? 10 : 0
+            anchors.bottomMargin: window.isLandscape ? 10 : 0
+            anchors.leftMargin: window.isPortrait ? 10 : 0
+            anchors.rightMargin: window.isPortrait ? 10 : 0
             spacing: 2
+            orientation: window.isLandscape ? ListView.Horizontal : ListView.Vertical
 
             ClockListModel {
                 id: clockListModel
@@ -96,30 +101,6 @@ AppPage {
             footer: Item { width: 10; height: 10 }
 
             delegate: ClockTile { gmt: gmtoffset; city: name }
-
-            states: [
-                State {
-                    name: "landscape"
-                    when: window.inLandscape || window.inInvertedLandscape
-                    PropertyChanges {
-                        target: listview
-                        anchors { leftMargin: 0; rightMargin: 0;
-                                  topMargin: 10; bottomMargin: 10 }
-                        orientation: ListView.Horizontal
-                    }
-                },
-                State {
-                    name: "portrait"
-                    when: window.inPortrait || window.inInvertedPortrait
-                    PropertyChanges {
-                        target: listview
-                        anchors { leftMargin: 10; rightMargin: 10;
-                                  topMargin: 0; bottomMargin: 0 }
-                        orientation: ListView.Vertical
-                    }
-                }
-            ]
-
         }
     }
 }
