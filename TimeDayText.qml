@@ -26,18 +26,23 @@ Text {
         hours = tz ? ((date.getUTCHours() + tz + 24)%24) : date.getUTCHours();
         minutes = date.getMinutes();
         seconds = date.getUTCSeconds();
-        day = (date.getDay() + dayOffset() + 7) % 7;
+        day = (date.getUTCDay() + dayOffset() + 7) % 7;
         text = qsTr("%1 %2").arg(Code.formatTime(hours,minutes)).arg(Code.weekday[day]);
     }
 
+    // calculate the weekday offset from UTC since we have no
+    // timezone support in Qt to get the actual date
+    // (see http://bugreports.qt.nokia.com/browse/QTBUG-10219)
     function dayOffset() {
         var date = new Date;
-        var nmidnight = (12 - date.getUTCHours() + 24) % 24;
-        var ntz = (tz + 12 + 24) % 24;
-        var nlocal = (date.getHours() - date.getUTCHours() + 12 + 24) % 24;
-        if (ntz >= nmidnight && nlocal < nmidnight) {
+        // calculations below are in "normalized" utc offsets:
+        // +0 to +23 hrs, with 0 set at international date line
+        var nMidnight = (12 - date.getUTCHours() + 24) % 24;
+        var nTz = (tz + 12 + 24) % 24;
+        var nUtc = 12;
+        if (nTz >= nMidnight && nUtc < nMidnight) {
             return 1;
-        } else if (nlocal >= nmidnight && ntz < nmidnight) {
+        } else if (nUtc >= nMidnight && nTz < nMidnight) {
             return -1;
         } else {
             return 0;
