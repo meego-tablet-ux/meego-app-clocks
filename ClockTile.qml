@@ -53,6 +53,21 @@ ExpandoBox {
                 text: qsTr("(GMT %1%2)").arg(gmt<0?"":"+").arg(gmt)
             }
         }
+
+        Image {
+            id: triangle
+            anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
+            anchors.right: parent.right
+            anchors.bottom: root.orientation == "vertical" ? parent.bottom : undefined
+            anchors.margins: 30
+            source: "image://themedimage/widgets/common/notifications/grabby"
+            rotation: {
+                if (root.orientation == "horizontal")
+                    return expanded ? 0 : 180
+                else
+                    return expanded ? 270 : 90
+            }
+        }
     }
 
     detailsComponent: Item {
