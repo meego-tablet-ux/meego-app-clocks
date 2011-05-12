@@ -1,6 +1,22 @@
+var weekday = [qsTr("Sunday"),
+               qsTr("Monday"),
+               qsTr("Tuesday"),
+               qsTr("Wednesday"),
+               qsTr("Thursday"),
+               qsTr("Friday"),
+               qsTr("Saturday")];
+
+var weekdayShort = [qsTr("Sun"),
+                    qsTr("Mon"),
+                    qsTr("Tue"),
+                    qsTr("Wed"),
+                    qsTr("Thu"),
+                    qsTr("Fri"),
+                    qsTr("Sat")];
+
 function formatTime(hour, min)
 {
-    return ((hour%12)?(hour%12):12) + ((min<10)?":0":":") + min + " " + ((hour < 12)?"am":"pm");
+    return qsTr("%1:%2").arg(hour).arg(min<10?"0"+min:min)
 }
 
 function isDay(hour)
@@ -10,14 +26,6 @@ function isDay(hour)
 
 function daysFriendly(days)
 {
-    var weekday = [qsTr("Mon"),
-                   qsTr("Tue"),
-                   qsTr("Wed"),
-                   qsTr("Thu"),
-                   qsTr("Fri"),
-                   qsTr("Sat"),
-                   qsTr("Sun")];
-
     if((days&0x7f) == 0x7f)
         return qsTr("Every Day");
     else if((days&0x7f) == 0x1f)
@@ -34,7 +42,7 @@ function daysFriendly(days)
         {
             if(cnt > 0)
                 res += ",";
-            res += weekday[idx];
+            res += weekdayShort[idx];
             cnt++;
         }
     }
