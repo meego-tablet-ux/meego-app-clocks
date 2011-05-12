@@ -1,5 +1,5 @@
 TRANSLATIONS += main.qml NewAlarmMenu.qml NewClockMenu.qml Alarm.qml
-VERSION = 0.2.3
+VERSION = 0.3.0
 PROJECT_NAME = meego-app-clocks
 
 TEMPLATE = lib
