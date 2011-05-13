@@ -160,6 +160,6 @@ ExpandoBox {
         onAccepted: clockListModel.destroyItemByID(itemid)
     }
 
-    orientation: window.inLandscape || window.inInvertedLandscape ? "vertical" : "horizontal"
+    orientation: window.isLandscape ? "vertical" : "horizontal"
 
 }
