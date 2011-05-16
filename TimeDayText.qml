@@ -27,7 +27,7 @@ Text {
         minutes = date.getMinutes();
         seconds = date.getUTCSeconds();
         day = (date.getUTCDay() + dayOffset() + 7) % 7;
-        text = qsTr("%1 %2").arg(Code.formatTime(hours,minutes)).arg(Code.weekday[day]);
+        text = qsTr("%1 %2").arg(Code.formatTime(hours,minutes)).arg(Code.weekday[(day - 1 + 7) % 7]);
     }
 
     // calculate the weekday offset from UTC since we have no

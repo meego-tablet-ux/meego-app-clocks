@@ -1,18 +1,18 @@
-var weekday = [qsTr("Sunday"),
-               qsTr("Monday"),
+var weekday = [qsTr("Monday"),
                qsTr("Tuesday"),
                qsTr("Wednesday"),
                qsTr("Thursday"),
                qsTr("Friday"),
-               qsTr("Saturday")];
+               qsTr("Saturday"),
+               qsTr("Sunday")];
 
-var weekdayShort = [qsTr("Sun"),
-                    qsTr("Mon"),
+var weekdayShort = [qsTr("Mon"),
                     qsTr("Tue"),
                     qsTr("Wed"),
                     qsTr("Thu"),
                     qsTr("Fri"),
-                    qsTr("Sat")];
+                    qsTr("Sat"),
+                    qsTr("Sun")];
 
 function formatTime(hour, min)
 {
