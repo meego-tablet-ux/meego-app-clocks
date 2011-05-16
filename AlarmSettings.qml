@@ -11,23 +11,27 @@ import MeeGo.Components 0.1
 import "functions.js" as Code
 
 Column {
-    property alias hours: timepicker.hours
-    property alias minutes: timepicker.minutes
-    property int days
-    property int snooze
-    property int type: typecontrol.item.selectedIndex
-    property string soundName
-    property string soundURI
-    property string songTitle
-    property string songURI
+    property string a_name: namecontrol.item.text
+    property alias a_hour: timepicker.hours
+    property alias a_minute: timepicker.minutes
+    property int a_days
+    property int a_snooze
+    property int a_soundtype: typecontrol.item.selectedIndex
+    property string a_soundname: ""
+    property string a_sounduri: ""
+    property string a_songname
+    property string a_songuri
 
     spacing: 10
 
     Theme { id: theme }
 
     AlarmSettingsRow {
+        id: namecontrol
         title: qsTr("Name:")
-        component: TextEntry { id: name }
+        component: TextEntry {
+            Component.onCompleted: text = a_name
+        }
     }
 
     AlarmSettingsRow {
@@ -39,7 +43,7 @@ Column {
                 anchors.left: parent.left
                 anchors.leftMargin: 14
                 font.pixelSize: theme.fontPixelSizeLarge
-                text: Code.formatTime(hours, minutes)
+                text: Code.formatTime(a_hour, a_minute)
             }
             MouseArea {
                 anchors.fill: parent
@@ -64,15 +68,15 @@ Column {
                         anchors.centerIn: parent
                         font.pixelSize: 16
                         text: Code.weekdayShort[index]
-                        color: (days&(0x1 << index)) ? "black" : "#AAAAAA"
+                        color: (a_days&(0x1 << index)) ? "black" : "#AAAAAA"
                     }
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            if (days & (0x1 << index))
-                                days &= ~(0x1 << index)
+                            if (a_days & (0x1 << index))
+                                a_days &= ~(0x1 << index)
                             else
-                                days |= (0x1 << index)
+                                a_days |= (0x1 << index)
                         }
                     }
                 }
@@ -112,9 +116,9 @@ Column {
                     "ChordDown",
                     "ChimeUp",
                     "ChimeDown"]
-            //FIXME
+            //FIXME: need meego alarm sounds
         }
-        visible: type == 0
+        visible: a_soundtype == 0
     }
 
     AlarmSettingsRow {
@@ -126,20 +130,20 @@ Column {
                 anchors.left: parent.left
                 anchors.leftMargin: 14
                 font.pixelSize: theme.fontPixelSizeLarge
-                text: songTitle
+                text: a_songname
             }
             MouseArea {
                 anchors.fill: parent
                 onClicked: musicpicker.show()
             }
         }
-        visible: type == 1
+        visible: a_soundtype == 1
         MusicPicker {
             id: musicpicker
             selectSongs: true
             onSongSelected: {
-                songTitle = title;
-                songURI = uri;
+                a_songname = title;
+                a_songuri = uri;
             }
         }
     }

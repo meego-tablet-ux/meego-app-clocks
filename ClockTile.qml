@@ -26,7 +26,23 @@ ExpandoBox {
             anchors.left: root.orientation == "horizontal" ? parent.left : undefined
             anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
             anchors.margins: 20
-            gmt: root.gmt
+
+            Component.onCompleted: timeChanged()
+
+            function timeChanged() {
+                var date = new Date;
+                hours = gmt ? ((date.getUTCHours() + gmt + 24)%24) : date.getUTCHours();
+                minutes = gmt ? date.getUTCMinutes() + ((gmt % 1) * 60) : date.getMinutes();
+                seconds = date.getUTCSeconds();
+            }
+
+            Timer {
+                interval: 100
+                running: true
+                repeat: true
+                onTriggered: clock.timeChanged()
+            }
+
         }
 
         Column {

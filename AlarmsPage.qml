@@ -47,7 +47,7 @@ AppPage {
             header: Item { width: 10; height: 10 }
             footer: Item { width: 10; height: 10 }
 
-            delegate: AlarmTile { gmt: gmtoffset; city: name }
+            delegate: AlarmTile { }
         }
     }
     ModalDialog {
@@ -58,11 +58,20 @@ AppPage {
         acceptButtonText: qsTr("Save")
         cancelButtonText: qsTr("Cancel")
         content: AlarmSettings {
+            id: alarmSettings
             anchors.fill: parent
             anchors { topMargin: 20; bottomMargin: 20; leftMargin: 40; rightMargin: 40 }
         }
         onAccepted: {
-            //FIXME
+            clockListModel.addAlarm(alarmSettings.a_name,
+                                    alarmSettings.a_days,
+                                    alarmSettings.a_soundtype,
+                                    alarmSettings.a_soundtype == 0 ? alarmSettings.a_soundname : alarmSettings.a_songname,
+                                    alarmSettings.a_soundtype == 0 ? alarmSettings.a_sounduri : alarmSettings.a_songuri,
+                                    alarmSettings.a_snooze,
+                                    true,
+                                    alarmSettings.a_hour,
+                                    alarmSettings.a_minute)
         }
     }
 }

@@ -15,26 +15,10 @@ Item {
     width: backgroundDay.width
     height: backgroundDay.height
 
-    property int gmt: 0
     property int hours: 0
     property int minutes: 0
     property int seconds: 0
-
-    Component.onCompleted: timeChanged()
-
-    function timeChanged() {
-        var date = new Date;
-        hours = gmt ? ((date.getUTCHours() + gmt + 24)%24) : date.getUTCHours();
-        minutes = gmt ? date.getUTCMinutes() + ((clock.gmt % 1) * 60) : date.getMinutes();
-        seconds = date.getUTCSeconds();
-    }
-
-    Timer {
-        interval: 100
-        running: true
-        repeat: true
-        onTriggered: clock.timeChanged()
-    }
+    property alias showSeconds: secondhand.visible
 
     Image {
         id: backgroundDay
