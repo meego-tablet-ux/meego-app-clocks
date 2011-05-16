@@ -41,7 +41,7 @@ Column {
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
-                anchors.leftMargin: 14
+                anchors.leftMargin: 6
                 font.pixelSize: theme.fontPixelSizeLarge
                 text: Code.formatTime(a_hour, a_minute)
             }
@@ -128,7 +128,7 @@ Column {
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
-                anchors.leftMargin: 14
+                anchors.leftMargin: 6
                 font.pixelSize: theme.fontPixelSizeLarge
                 text: a_songname
             }

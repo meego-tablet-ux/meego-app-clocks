@@ -55,7 +55,7 @@ Rectangle {
                 anchors.baseline: parent.verticalCenter
                 anchors.baselineOffset: 6
                 anchors.left: parent.left
-                anchors.leftMargin: 14
+                anchors.leftMargin: 6
                 color: theme_fontColorMedium
                 font.pixelSize: 18
                 elide: Text.ElideRight
