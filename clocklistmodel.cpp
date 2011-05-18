@@ -113,9 +113,9 @@ void ClockListModel::setType(const int type)
             settings.beginGroup("clocks");
             for (int i = 0; i < defaultzones.size(); i++) {
                 KTimeZone zone = KSystemTimeZones::zone(defaultzones[i]);
-                settings.setValue(QString("%1/name").arg(i+1), cleanTZName(zone.name()));
-                settings.setValue(QString("%1/title").arg(i+1), zone.name());
-                settings.setValue(QString("%1/gmt").arg(i+1), zone.currentOffset(Qt::UTC)/3600);
+                settings.setValue(QString("00%1/name").arg(i+1), cleanTZName(zone.name()));
+                settings.setValue(QString("00%1/title").arg(i+1), zone.name());
+                settings.setValue(QString("00%1/gmt").arg(i+1), zone.currentOffset(Qt::UTC)/3600);
             }
             settings.endGroup();
         }
