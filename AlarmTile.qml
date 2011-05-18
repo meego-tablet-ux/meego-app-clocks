@@ -94,6 +94,7 @@ ExpandoBox {
                 anchors { top: parent.top; left: parent.left; right: parent.right; bottom: buttonRow.top }
                 color: "#d5ecf6"
                 AlarmSettings {
+                    id: alarmSettings
                     anchors.fill: parent
                     anchors { topMargin: 20; bottomMargin: 20; leftMargin: 20 }
                     anchors.rightMargin: root.orientation == "vertical" ? 20 : 70
