@@ -27,6 +27,14 @@ Item {
     height: orientation == "vertical" ? parent.height : header.height
     clip: true
 
+    //allow only one expandobox open at a time
+    onExpandedChanged: {
+        if (ListView.view.currentItem && ListView.view.currentIndex != index)
+            ListView.view.currentItem.expanded = false;
+        if (expanded == true)
+            ListView.view.currentIndex = index;
+    }
+
     onHeaderComponentChanged: {
         if (headerItem) headerItem.destroy();
         headerItem = headerComponent.createObject(header);
