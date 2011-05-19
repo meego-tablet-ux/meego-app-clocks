@@ -15,7 +15,7 @@ Window {
 
     // simplify orientation code
     property bool isLandscape: orientation == 1 || orientation == 3
-    property bool isPortrait: orientation == 2 || orientation == 4
+    property bool isPortrait: orientation == 0 || orientation == 2
 
     showToolBarSearch: false
 
