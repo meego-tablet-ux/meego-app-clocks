@@ -48,6 +48,7 @@ ExpandoBox {
         Column {
             id: label
             anchors.left: root.orientation == "vertical" ? parent.left : clock.right
+            anchors.right: root.orientation == "vertical" ? parent.right : triangle.left
             anchors.top: root.orientation == "vertical" ? parent.top : undefined
             anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
             anchors.margins: 20
@@ -57,11 +58,15 @@ ExpandoBox {
                 font.pixelSize: 20
                 color: theme_buttonFontColorActive
                 tz: root.gmt
+                width: parent.width
+                elide: Text.ElideRight
             }
             Text {
                 id: cityLabel
                 font.pixelSize: 18
                 text: city
+                width: parent.width
+                elide: Text.ElideRight
             }
             Text {
                 id: gmtLabel

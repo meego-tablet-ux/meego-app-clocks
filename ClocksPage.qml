@@ -63,6 +63,7 @@ AppPage {
             Column {
                 id: label
                 anchors.left: window.isLandscape ? parent.left : clock.right
+                anchors.right: parent.right
                 anchors.top: window.isLandscape ? parent.top : undefined
                 anchors.verticalCenter: window.isPortrait ? parent.verticalCenter : undefined
                 anchors.margins: 20
@@ -72,11 +73,15 @@ AppPage {
                     font.pixelSize: 20
                     color: theme_buttonFontColorActive
                     tz: localClock.gmt
+                    width: parent.width
+                    elide: Text.ElideRight
                 }
                 Text {
                     id: cityLabel
                     font.pixelSize: 18
                     text: localClock.city
+                    width: parent.width
+                    elide: Text.ElideRight
                 }
                 Text {
                     id: gmtLabel
