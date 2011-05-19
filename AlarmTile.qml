@@ -14,12 +14,29 @@ import "functions.js" as Code
 ExpandoBox {
     id: root
     property bool a_active: headerItem.on
+    property bool __suppress: false
 
-    Component.onCompleted: headerItem.on = active
+    Component.onCompleted: {
+        __suppress = true;
+        headerItem.on = active;
+        __suppress = false;
+    }
 
     headerComponent: Item {
         property alias on: activeToggle.on
 
+        onOnChanged: { if (!__suppress)
+            clockListModel.editAlarm(itemid,
+                                     name,
+                                     days,
+                                     soundtype,
+                                     soundname,
+                                     soundfile,
+                                     snooze,
+                                     on,
+                                     hour,
+                                     minute);
+        }
         width: root.orientation == "vertical" ? 189 : listview.width
         height: root.orientation == "vertical" ? listview.height : 164
 
