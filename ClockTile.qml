@@ -16,6 +16,20 @@ ExpandoBox {
     property int gmt
     property string city: ""
 
+    SaveRestoreState {
+	id: boxState
+	onSaveRequired: {
+	    setValue("expanded." + city, root.expanded)
+	    sync()
+	}
+    }
+
+    Component.onCompleted: {
+	if (boxState.restoreRequired) {
+	    root.expanded = boxState.value("expanded." + city, false)
+	}
+    }
+
     headerComponent: Item {
         width: root.orientation == "vertical" ? 189 : listview.width
         height: root.orientation == "vertical" ? listview.height : 164
