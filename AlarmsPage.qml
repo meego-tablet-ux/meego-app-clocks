@@ -13,13 +13,16 @@ import MeeGo.App.Clocks 0.1
 AppPage {
     id: alarmsPage
 
+    property Item __alarmItem: null
+
     pageTitle: qsTr("Alarms")
 
     actionMenuModel: [qsTr("New alarm")]
     actionMenuPayload: [1]
     onActionMenuTriggered: {
         if (selectedItem == 1) {
-            newAlarmDialog.show();
+            __alarmItem = newAlarmComponent.createObject(alarmsPage);
+            __alarmItem.show();
         }
     }
 
@@ -52,28 +55,32 @@ AppPage {
             delegate: AlarmTile { }
         }
     }
-    ModalDialog {
-        id: newAlarmDialog
-        width: 540 + 10
-        height: 375 + 150
-        title: qsTr("Add new alarm")
-        acceptButtonText: qsTr("Save")
-        cancelButtonText: qsTr("Cancel")
-        content: AlarmSettings {
-            id: alarmSettings
-            anchors.fill: parent
-            anchors { topMargin: 20; bottomMargin: 20; leftMargin: 40; rightMargin: 40 }
-        }
-        onAccepted: {
-            clockListModel.addAlarm(alarmSettings.a_name,
-                                    alarmSettings.a_days,
-                                    alarmSettings.a_soundtype,
-                                    alarmSettings.a_soundtype == 0 ? alarmSettings.a_soundname : alarmSettings.a_songname,
-                                    alarmSettings.a_soundtype == 0 ? alarmSettings.a_sounduri : alarmSettings.a_songuri,
-                                    alarmSettings.a_snooze,
-                                    true,
-                                    alarmSettings.a_hour,
-                                    alarmSettings.a_minute)
+
+    Component {
+        id: newAlarmComponent
+        ModalDialog {
+            width: 540 + 10
+            height: 375 + 150
+            title: qsTr("Add new alarm")
+            acceptButtonText: qsTr("Save")
+            cancelButtonText: qsTr("Cancel")
+            content: AlarmSettings {
+                id: alarmSettings
+                anchors.fill: parent
+                anchors { topMargin: 20; bottomMargin: 20; leftMargin: 40; rightMargin: 40 }
+            }
+            onAccepted: {
+                clockListModel.addAlarm(alarmSettings.a_name,
+                                        alarmSettings.a_days,
+                                        alarmSettings.a_soundtype,
+                                        alarmSettings.a_soundtype == 0 ? alarmSettings.a_soundname : alarmSettings.a_songname,
+                                        alarmSettings.a_soundtype == 0 ? alarmSettings.a_sounduri : alarmSettings.a_songuri,
+                                        alarmSettings.a_snooze,
+                                        true,
+                                        alarmSettings.a_hour,
+                                        alarmSettings.a_minute);
+                __alarmItem.destroy();
+            }
         }
     }
 
