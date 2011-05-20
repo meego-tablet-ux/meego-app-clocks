@@ -11,6 +11,8 @@ import MeeGo.Components 0.1
 import MeeGo.App.Clocks 0.1
 
 AppPage {
+    id: clocksPage
+
     pageTitle: qsTr("Clocks")
     actionMenuModel: [qsTr("New clock")]
     actionMenuPayload: [1]
@@ -158,6 +160,25 @@ AppPage {
                 }
             }
         }
+    }
+
+    function deleteClock(id) {
+        confirmDelete.id = id;
+        confirmDelete.show();
+    }
+
+    ModalMessageBox {
+        id: confirmDelete
+        property string id
+        width: 400
+        height: 250
+        title: qsTr("Delete clock")
+        text: qsTr("Are you sure you want to delete?")
+        acceptButtonText: qsTr("Delete")
+        cancelButtonText: qsTr("Cancel")
+        acceptButtonImage: "image://themedimage/widgets/common/button/button-negative"
+        acceptButtonImagePressed: "image://themedimage/widgets/common/button/button-negative-pressed"
+        onAccepted: clockListModel.destroyItemByID(id)
     }
 
     ModalMessageBox {

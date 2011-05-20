@@ -176,23 +176,10 @@ ExpandoBox {
                     bgSourceUp: "image://themedimage/widgets/common/button/button-negative"
                     bgSourceDn: "image://themedimage/widgets/common/button/button-negative-pressed"
                     text: qsTr("Delete")
-                    onClicked: confirmDelete.show()
+                    onClicked: alarmsPage.deleteAlarm(itemid)
                 }
             }
         }
-    }
-
-    ModalMessageBox {
-        id: confirmDelete
-        width: 400
-        height: 250
-        title: qsTr("Delete alarm")
-        text: qsTr("Are you sure you want to delete?")
-        acceptButtonText: qsTr("Delete")
-        cancelButtonText: qsTr("Cancel")
-        acceptButtonImage: "image://themedimage/widgets/common/button/button-negative"
-        acceptButtonImagePressed: "image://themedimage/widgets/common/button/button-negative-pressed"
-        onAccepted: clockListModel.destroyItemByID(itemid)
     }
 
     orientation: window.isLandscape ? "vertical" : "horizontal"
