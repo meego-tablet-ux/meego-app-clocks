@@ -35,6 +35,26 @@ ClockListModel::ClockListModel(QObject *parent)
     roles.insert(ClockItem::Minute, "minute");
     setRoleNames(roles);
 
+    calendar = new ExtendedCalendar(QLatin1String("UTC"));
+    calendarPtr = ExtendedCalendar::Ptr(calendar);
+    storage = calendar->defaultStorage(calendarPtr);
+    storage->open();
+
+    Notebook::List nbList = storage->notebooks();
+    for (int i = 0; i < nbList.count(); i++) {
+            Notebook::Ptr nbPtr = nbList.at(i);
+            Notebook *nb = nbPtr.data();
+            if (nb->name() == "alarmsnotebook") {
+                    notebook = nb;
+                    break;
+            }
+    }
+    if (!notebook) {
+            notebook = new Notebook("alarmsnotebook", "");
+            Notebook::Ptr notebookPtr = Notebook::Ptr(notebook);
+            storage->addNotebook(notebookPtr);
+    }
+    nuid = notebook->uid();
 
     m_type = -1;
 }
@@ -109,25 +129,41 @@ void ClockListModel::setType(const int type)
     }
     else if(m_type == ListofAlarms)
     {
-        settings.beginGroup("alarms");
-        QStringList ids = settings.childGroups();
-        for (int i = 0; i < ids.count(); i++) {
-            QString name = settings.value(ids[i] + "/name", "undefined").toString();
-            QString soundname = settings.value(ids[i] + "/soundname", "undefined").toString();
-            QString soundfile = settings.value(ids[i] + "/soundfile", "undefined").toString();
-            QString uid = settings.value(ids[i] + "/uid", "undefined").toString();
-            int days = settings.value(ids[i] + "/days", 0).toInt();
-            int soundtype = settings.value(ids[i] + "/soundtype", 0).toInt();
-            int snooze = settings.value(ids[i] + "/snooze", 0).toInt();
-            bool active = settings.value(ids[i] + "/active", 0).toBool();
-            int hour = settings.value(ids[i] + "/hour", 0).toInt();
-            int minute = settings.value(ids[i] + "/minute", -1).toInt();
-            //if((minute > -1)&&(hour > 0)&&(snooze > 0)&&(soundname != "undefined")&&
-            //   (name != "undefined")&&(soundfile != "undefined")&&(uid != "undefined"))
-            newItemsList << new ClockItem(name, days, soundtype, soundname, soundfile, snooze, active, hour, minute, uid);
+        storage->loadNotebookIncidences(nuid);
 
+        KCalCore::Event::List eventList;
+            eventList = calendarPtr->rawEvents(KCalCore::EventSortStartDate, KCalCore::SortDirectionAscending);
+
+        for (int i = 0; i < eventList.count(); i++)
+        {
+            KCalCore::Event *event = eventList.at(i).data();
+            QStringList desc = event->description().split("!");
+            QString name = event->summary();
+            int soundtype = (desc.isEmpty())?0:desc.at(0).toInt();
+            QString soundname = (desc.count() < 2)?"":desc.at(1);
+            QString uid = event->uid();
+            KCalCore::Recurrence* theRecurrence = event->recurrence();
+            QBitArray qb = theRecurrence->days();
+            int days = 0;
+            for(int i = 0; i < 7; i++)
+                if(qb.at(i))
+                    days |= (1<<i);
+            KCalCore::Alarm::List alarms = event->alarms();
+            if (alarms.count() < 1)
+                continue;
+            KCalCore::Alarm::Ptr alarm = alarms.at(0);
+            QString soundfile = alarm->audioFile();
+            int snooze = alarm->snoozeTime().asSeconds()/60;
+            bool active = alarm->enabled();
+            QTime thetime = alarm->time().time();
+            int hour = thetime.hour() + 1;
+            int minute = thetime.minute();
+
+            if((minute > -1)&&(hour > 0)&&(snooze > 0)&&(soundname != "undefined")&&
+               (name != "undefined")&&(soundfile != "undefined")&&(uid != "undefined"))
+                newItemsList << new ClockItem(name, days, soundtype, soundname, soundfile,
+                                              snooze, active, hour, minute, uid);
         }
-        settings.endGroup();
     }
     else if(m_type == ListofTimers)
     {
@@ -265,29 +301,28 @@ void ClockListModel::addAlarm(const QString &name, const int days, const int sou
         return;
     }
 
-    //QString uid = calendarAlarm(name, days, soundtype, soundname, soundfile,
-    //                             snooze, active, hour, minute);
-    QString uid = "FIXME";
+    QString uid = calendarAlarm(name, days, soundtype, soundname, soundfile,
+                                 snooze, active, hour, minute);
 
     beginInsertRows(QModelIndex(), itemsList.count(), itemsList.count());
     itemsList << new ClockItem(name, days, soundtype, soundname, soundfile,
                                snooze, active, hour, minute, uid);
     endInsertRows();
 
-    QString group;
-    group.sprintf("alarms/%03d", itemsList.count()-1);
-    settings.beginGroup(group);
-    settings.setValue("name", name);
-    settings.setValue("days", days);
-    settings.setValue("soundtype", soundtype);
-    settings.setValue("soundname", soundname);
-    settings.setValue("soundfile", soundfile);
-    settings.setValue("snooze", snooze);
-    settings.setValue("active", active);
-    settings.setValue("hour", hour);
-    settings.setValue("minute", minute);
-    settings.setValue("uid", uid);
-    settings.endGroup();
+//    QString group;
+//    group.sprintf("alarms/%03d", itemsList.count()-1);
+//    settings.beginGroup(group);
+//    settings.setValue("name", name);
+//    settings.setValue("days", days);
+//    settings.setValue("soundtype", soundtype);
+//    settings.setValue("soundname", soundname);
+//    settings.setValue("soundfile", soundfile);
+//    settings.setValue("snooze", snooze);
+//    settings.setValue("active", active);
+//    settings.setValue("hour", hour);
+//    settings.setValue("minute", minute);
+//    settings.setValue("uid", uid);
+//    settings.endGroup();
     emit countChanged(itemsList.count());
 }
 
@@ -324,24 +359,23 @@ void ClockListModel::editAlarm(const QString &id, const QString &name, const int
     if(!getClock(id, item, idx))
         return;
 
-    //QString uid = calendarAlarm(name, days, soundtype, soundname, soundfile,
-    //              snooze, active, hour, minute, item->m_uid);
-    QString uid = "FIXME";
+    QString uid = calendarAlarm(name, days, soundtype, soundname, soundfile,
+                  snooze, active, hour, minute, item->m_uid);
 
-    QString group;
-    group.sprintf("alarms/%03d", idx);
-    settings.beginGroup(group);
-    settings.setValue("name", name);
-    settings.setValue("days", days);
-    settings.setValue("soundtype", soundtype);
-    settings.setValue("soundname", soundname);
-    settings.setValue("soundfile", soundfile);
-    settings.setValue("snooze", snooze);
-    settings.setValue("active", active);
-    settings.setValue("hour", hour);
-    settings.setValue("minute", minute);
-    settings.setValue("uid", uid);
-    settings.endGroup();
+//    QString group;
+//    group.sprintf("alarms/%03d", idx);
+//    settings.beginGroup(group);
+//    settings.setValue("name", name);
+//    settings.setValue("days", days);
+//    settings.setValue("soundtype", soundtype);
+//    settings.setValue("soundname", soundname);
+//    settings.setValue("soundfile", soundfile);
+//    settings.setValue("snooze", snooze);
+//    settings.setValue("active", active);
+//    settings.setValue("hour", hour);
+//    settings.setValue("minute", minute);
+//    settings.setValue("uid", uid);
+//    settings.endGroup();
     item->m_name = name;
     item->m_days = days;
     item->m_soundtype = soundtype;
@@ -450,6 +484,18 @@ void ClockListModel::destroyItemByID(const QString &id)
     if(!getClock(id, item, idx))
         return;
 
+    if(item->m_type == ClockItem::AlarmItem)
+    {
+        storage->loadNotebookIncidences(nuid);
+        KCalCore::Event::Ptr ptr = KCalCore::Event::Ptr(calendarPtr->event(item->m_uid));
+        if(ptr == NULL)
+            qDebug() << "alarm not found in calendar db: " << item->m_name;
+        else
+        {
+            calendarPtr->deleteEvent( ptr );
+            storage->save();
+        }
+    }
     beginRemoveRows(QModelIndex(), idx, idx);
     itemsList.removeAt(idx);
     delete item;
