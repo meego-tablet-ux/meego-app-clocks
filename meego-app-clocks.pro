@@ -1,4 +1,4 @@
-TRANSLATIONS += main.qml NewAlarmMenu.qml NewClockMenu.qml Alarm.qml
+TRANSLATIONS += *.qml
 VERSION = 0.3.2
 PROJECT_NAME = meego-app-clocks
 
@@ -30,7 +30,7 @@ HEADERS += clocks.h \
     clocklistmodel.h \
     clockproxy.h
 
-qmlfiles.files += *.qml *.png *.js i18n
+qmlfiles.files += *.qml *.js i18n
 qmlfiles.path += $$INSTALL_ROOT/usr/share/$$PROJECT_NAME
 qmldir.files += $$TARGET
 qmldir.path += $$[QT_INSTALL_IMPORTS]/MeeGo/App
