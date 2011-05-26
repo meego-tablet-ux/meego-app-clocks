@@ -22,6 +22,7 @@ Item {
     property alias expanded: details.visible
     property color bgColorExpanded: "#eaf6fb"
     property color bgColorCollapsed: "white"
+    property bool enabled: true
 
     width: orientation == "vertical" ? header.width : parent.width
     height: orientation == "vertical" ? parent.height : header.height
@@ -58,7 +59,7 @@ Item {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: expanded = !expanded
+            onClicked: if (root.enabled) expanded = !expanded;
         }
 
     }

@@ -30,6 +30,9 @@ ExpandoBox {
 	}
     }
 
+    enabled: index != 0
+    bgColorCollapsed: index == 0 ? "#DDDDDD" : "white"
+
     headerComponent: Item {
         width: root.orientation == "vertical" ? 189 : listview.width
         height: root.orientation == "vertical" ? listview.height : 164
@@ -91,6 +94,7 @@ ExpandoBox {
 
         Image {
             id: triangle
+            visible: index != 0
             anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
             anchors.right: parent.right
             anchors.bottom: root.orientation == "vertical" ? parent.bottom : undefined
