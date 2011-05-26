@@ -98,6 +98,31 @@ void ClockListModel::setType(const int type)
 
     if(m_type == ListofClocks)
     {
+        Maemo::Timed::Interface timed;
+        QDBusReply<Maemo::Timed::WallClock::Info> reply = timed.get_wall_clock_info_sync();
+        QString localzonename = "GMT";
+        int gmt = 0;
+        QString name, title;
+        if (reply.isValid()) {
+          Maemo::Timed::WallClock::Info info = reply.value();
+          localzonename = info.etcLocaltime();
+          gmt = info.secondsEastOfGmt()/3600;
+          QString zonedir = "/usr/share/zoneinfo/";
+          title = localzonename.mid(zonedir.size());
+          QStringList temp = title.split("/", QString::SkipEmptyParts);
+          QString res = temp.last();
+          res.replace("_", " ");
+          name = res;
+        }
+        else
+        {
+            name = localzonename;
+            title = localzonename;
+        }
+        localzone = new ClockItem(name, title, gmt);
+
+        newItemsList << localzone;
+
         if(!settings.contains("firstuse"))
         {
             QStringList defaultzones;
@@ -108,9 +133,9 @@ void ClockListModel::setType(const int type)
             settings.beginGroup("clocks");
             for (int i = 0; i < defaultzones.size(); i++) {
                 KTimeZone zone = KSystemTimeZones::zone(defaultzones[i]);
-                settings.setValue(QString("00%1/name").arg(i), cleanTZName(zone.name()));
-                settings.setValue(QString("00%1/title").arg(i), zone.name());
-                settings.setValue(QString("00%1/gmt").arg(i), zone.currentOffset(Qt::UTC)/3600);
+                settings.setValue(QString("00%1/name").arg(i+1), cleanTZName(zone.name()));
+                settings.setValue(QString("00%1/title").arg(i+1), zone.name());
+                settings.setValue(QString("00%1/gmt").arg(i+1), zone.currentOffset(Qt::UTC)/3600);
             }
             settings.endGroup();
         }
@@ -443,7 +468,7 @@ void ClockListModel::storeClockData()
     if(m_type == ListofClocks)
     {
         settings.remove("clocks");
-        for(int i = 0; i < itemsList.count(); i++)
+        for(int i = 1; i < itemsList.count(); i++)
         {
             QString group;
             group.sprintf("clocks/%03d", i);
