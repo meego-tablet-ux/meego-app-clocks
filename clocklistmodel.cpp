@@ -12,6 +12,9 @@
 #include <kcalcoren/ksystemtimezone.h>
 #include "clocklistmodel.h"
 
+#define CONNMAN_SERVICE "net.connman"
+#define CONNMAN_CLOCK_INTERFACE CONNMAN_SERVICE ".Clock"
+
 using namespace std;
 
 ClockListModel::ClockListModel(QObject *parent)
@@ -33,6 +36,8 @@ ClockListModel::ClockListModel(QObject *parent)
     roles.insert(ClockItem::Hour, "hour");
     roles.insert(ClockItem::Minute, "minute");
     setRoleNames(roles);
+
+    mClockProxy = new ClockProxy(CONNMAN_SERVICE, "/", QDBusConnection::systemBus(), this);
 
     calendar = new ExtendedCalendar(QLatin1String("UTC"));
     calendarPtr = ExtendedCalendar::Ptr(calendar);
@@ -99,9 +104,22 @@ void ClockListModel::setType(const int type)
     {
         QString localzonename = "GMT";
         int gmt = 0;
-        QString name, title;
-        name = localzonename;
-        title = localzonename;
+        QString name = localzonename;
+        QString title = localzonename;
+        if (!mClockProxy->isValid()) {
+            qCritical("unable to connect to " CONNMAN_CLOCK_INTERFACE);
+        } else {
+            QDBusPendingReply<QVariantMap> reply = mClockProxy->GetProperties();
+            reply.waitForFinished();
+            if (reply.isError())
+                qCritical() << CONNMAN_CLOCK_INTERFACE ":" << reply.error().name() << reply.error().message();
+            else {
+                title = reply.value().value("Timezone").toString();
+                KTimeZone zone = KSystemTimeZones::zone(title);
+                name = cleanTZName(title);
+                gmt = zone.currentOffset(Qt::UTC)/3600;
+            }
+        }
         localzone = new ClockItem(name, title, gmt);
         newItemsList << localzone;
 

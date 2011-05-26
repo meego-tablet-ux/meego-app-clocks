@@ -21,12 +21,14 @@ MOC_DIR = .moc
 # Input
 SOURCES += clocks.cpp \
     clockitem.cpp \
-    clocklistmodel.cpp
+    clocklistmodel.cpp \
+    clockproxy.cpp
 OTHER_FILES += \
     qmldir
 HEADERS += clocks.h \
     clockitem.h \
-    clocklistmodel.h
+    clocklistmodel.h \
+    clockproxy.h
 
 qmlfiles.files += *.qml *.png *.js i18n
 qmlfiles.path += $$INSTALL_ROOT/usr/share/$$PROJECT_NAME
