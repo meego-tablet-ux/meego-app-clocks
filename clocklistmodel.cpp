@@ -10,7 +10,6 @@
 #include <QDebug>
 #include <QtDBus/QtDBus>
 #include <kcalcoren/ksystemtimezone.h>
-#include <timed/interface>
 #include "clocklistmodel.h"
 
 using namespace std;
@@ -98,29 +97,12 @@ void ClockListModel::setType(const int type)
 
     if(m_type == ListofClocks)
     {
-        Maemo::Timed::Interface timed;
-        QDBusReply<Maemo::Timed::WallClock::Info> reply = timed.get_wall_clock_info_sync();
         QString localzonename = "GMT";
         int gmt = 0;
         QString name, title;
-        if (reply.isValid()) {
-          Maemo::Timed::WallClock::Info info = reply.value();
-          localzonename = info.etcLocaltime();
-          gmt = info.secondsEastOfGmt()/3600;
-          QString zonedir = "/usr/share/zoneinfo/";
-          title = localzonename.mid(zonedir.size());
-          QStringList temp = title.split("/", QString::SkipEmptyParts);
-          QString res = temp.last();
-          res.replace("_", " ");
-          name = res;
-        }
-        else
-        {
-            name = localzonename;
-            title = localzonename;
-        }
+        name = localzonename;
+        title = localzonename;
         localzone = new ClockItem(name, title, gmt);
-
         newItemsList << localzone;
 
         if(!settings.contains("firstuse"))
@@ -435,32 +417,6 @@ void ClockListModel::setOrder(const QString &id, const int order)
     storeClockData();
     emit dataChanged(index(idx, 0), index(idx, 0));
     emit dataChanged(index(idxtgt, 0), index(idxtgt, 0));
-}
-
-void ClockListModel::setLocalClock(const QString &id)
-{
-    int idx = 0;
-    ClockItem *item = NULL;
-    if(!getClock(id, item, idx))
-        return;
-
-    if(idx == 0)
-        return;
-
-    Maemo::Timed::Interface timed;
-    Maemo::Timed::WallClock::Settings set;
-    set.setTimezoneManual(item->m_title);
-    QDBusReply<bool> reply1 = timed.wall_clock_settings_sync(set) ;
-    if(!reply1.isValid())
-    {
-        qDebug() << "pid call failed" << timed.lastError() ;
-        return;
-    }
-
-    localzone->m_title = item->m_title;
-    localzone->m_name = item->m_name;
-    localzone->m_gmtoffset = item->m_gmtoffset;
-    emit dataChanged(index(0, 0), index(0, 0));
 }
 
 void ClockListModel::storeClockData()

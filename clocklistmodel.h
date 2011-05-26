@@ -64,7 +64,6 @@ public slots:
                    const int soundtype, const QString &soundname, const QString &soundfile,
                    const int snooze, const bool active,
                    const int hour, const int minute);
-    void setLocalClock(const QString &id);
     void setOrder(const QString &id, const int order);
 
 signals:

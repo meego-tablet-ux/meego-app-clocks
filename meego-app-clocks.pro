@@ -12,8 +12,7 @@ CONFIG += qt \
     link_pkgconfig
 PKGCONFIG += gconf-2.0 \
     libkcalcoren \
-    libmkcal \
-    timed
+    libmkcal
 TARGET = $$qtLibraryTarget($$TARGET)
 DESTDIR = $$TARGET
 OBJECTS_DIR = .obj
