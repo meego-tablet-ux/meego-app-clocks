@@ -103,6 +103,9 @@ ExpandoBox {
         }
     }
 
+    detailsWidthHint: 505
+    detailsHeightHint: 440
+
     detailsComponent: Item {
         width: root.orientation == "vertical" ? 505 : listview.width
         height: root.orientation == "vertical" ? listview.height : 440

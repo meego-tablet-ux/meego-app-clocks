@@ -19,10 +19,15 @@ Item {
     property Component detailsComponent: null
     property Item detailsItem: null
     property string orientation: "horizontal"
-    property alias expanded: details.visible
+    property bool expanded: false
     property color bgColorExpanded: "#eaf6fb"
     property color bgColorCollapsed: "white"
     property bool enabled: true
+
+    // hints provide the detailsComponent geometry, so the expandobox
+    // can animate expanding before the component has loaded
+    property int detailsWidthHint: 0
+    property int detailsHeightHint: 0
 
     width: orientation == "vertical" ? header.width : parent.width
     height: orientation == "vertical" ? parent.height : header.height
@@ -39,13 +44,6 @@ Item {
     onHeaderComponentChanged: {
         if (headerItem) headerItem.destroy();
         headerItem = headerComponent.createObject(header);
-    }
-
-    onStateChanged: {
-        if (state == "expanded")
-            detailsItem = detailsComponent.createObject(details);
-        else if (detailsItem)
-            detailsItem.destroy();
     }
 
     Rectangle {
@@ -69,11 +67,20 @@ Item {
 
         anchors.top: orientation == "vertical" ? parent.top : header.bottom
         anchors.left: orientation == "vertical" ? header.right : parent.left
-        // avoid warnings when detailsItem gets destroyed
-        width: detailsItem ? detailsItem.width : 0
-        height: detailsItem ? detailsItem.height : 0
+        width: {
+            if (orientation == "vertical")
+                return detailsItem ? detailsItem.width : detailsWidthHint;
+            else
+                return parent.width;
+        }
+        height: {
+            if (orientation == "horizontal")
+                return detailsItem ? detailsItem.height : detailsHeightHint;
+            else
+                return parent.height;
+        }
         color: bgColorExpanded
-        visible: false
+        opacity: 0.0
     }
 
     states: State {
@@ -84,14 +91,22 @@ Item {
                 width: orientation == "vertical" ? header.width + details.width : parent.width
                 height: orientation == "vertical" ? parent.height : header.height + details.height
             }
+            PropertyChanges {
+                target: details
+                opacity: 1.0
+            }
     }
 
     transitions: Transition {
+        reversible: true
         SequentialAnimation {
-            PropertyAnimation { properties: "width,height"; duration: 150 }
+            PropertyAnimation { properties: "width,height,opacity"; duration: 150 }
             ScriptAction {
-                script: if (expanded)
-                ListView.view.positionViewAtIndex(index, ListView.Center)
+                script: if (expanded) {
+                    ListView.view.positionViewAtIndex(index, ListView.Center);
+                    detailsItem = detailsComponent.createObject(details);
+                } else if (detailsItem)
+                    detailsItem.destroy();
             }
         }
     }
