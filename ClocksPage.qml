@@ -27,78 +27,9 @@ AppPage {
         anchors.fill: parent
         color: "#EEEEEE" //TODO: get color from theme
 
-        Rectangle {
-            id: localClock
-            property int gmt: +3 //FIXME: timezone to come from connman
-            property string city: "Helsinki"
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.margins: 10
-            width: window.isLandscape ? 189 : parent.width - 20
-            height: window.isLandscape ? parent.height - 20 : 164
-            color: "#DDDDDD" //TODO: need vis reference for this
-
-            Clock {
-                id: clock
-                anchors.centerIn: window.isLandscape ? parent : undefined
-                anchors.left: window.isPortrait ? parent.left : undefined
-                anchors.verticalCenter: window.isPortrait ? parent.verticalCenter : undefined
-                anchors.margins: 20
-
-                Component.onCompleted: timeChanged()
-
-                function timeChanged() {
-                    var date = new Date;
-                    hours = localClock.gmt ? ((date.getUTCHours() + localClock.gmt + 24)%24) : date.getUTCHours();
-                    minutes = localClock.gmt ? date.getUTCMinutes() + ((localClock.gmt % 1) * 60) : date.getMinutes();
-                    seconds = date.getUTCSeconds();
-                }
-
-                Timer {
-                    interval: 100
-                    running: true
-                    repeat: true
-                    onTriggered: clock.timeChanged()
-                }
-            }
-
-            Column {
-                id: label
-                anchors.left: window.isLandscape ? parent.left : clock.right
-                anchors.right: parent.right
-                anchors.top: window.isLandscape ? parent.top : undefined
-                anchors.verticalCenter: window.isPortrait ? parent.verticalCenter : undefined
-                anchors.margins: 20
-                spacing: 5
-                TimeDayText {
-                    id: timeLabel
-                    font.pixelSize: 20
-                    color: theme_buttonFontColorActive
-                    tz: localClock.gmt
-                    width: parent.width
-                    elide: Text.ElideRight
-                }
-                Text {
-                    id: cityLabel
-                    font.pixelSize: 18
-                    text: localClock.city
-                    width: parent.width
-                    elide: Text.ElideRight
-                }
-                Text {
-                    id: gmtLabel
-                    font.pixelSize: 16
-                    text: qsTr("(GMT %1%2)").arg(localClock.gmt<0?"":"+").arg(localClock.gmt)
-                }
-            }
-        }
-
         ListView {
             id: listview
-            anchors.top: window.isLandscape ? parent.top : localClock.bottom
-            anchors.left: window.isLandscape ? localClock.right : parent.left
-            anchors.right: parent.right
-            anchors.bottom : parent.bottom
+            anchors.fill: parent
             anchors.topMargin: window.isLandscape ? 10 : 0
             anchors.bottomMargin: window.isLandscape ? 10 : 0
             anchors.leftMargin: window.isPortrait ? 10 : 0
@@ -115,7 +46,7 @@ AppPage {
             model: clockListModel
 
             //spacers to create illusion of 10px border at ends
-            header: Item { width: 2; height: 2 }
+            header: Item { width: 10; height: 10 }
             footer: Item { width: 10; height: 10 }
 
             delegate: ClockTile { gmt: gmtoffset; city: name }
@@ -191,6 +122,5 @@ AppPage {
         showAcceptButton: false
         cancelButtonText: qsTr("Cancel")
     }
-
 
 }
