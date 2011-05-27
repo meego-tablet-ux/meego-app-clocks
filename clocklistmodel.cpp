@@ -184,10 +184,7 @@ void ClockListModel::setType(const int type)
             int hour = thetime.hour() + 1;
             int minute = thetime.minute();
 
-            if((minute > -1)&&(hour > 0)&&(snooze > 0)&&(soundname != "undefined")&&
-               (name != "undefined")&&(soundfile != "undefined")&&(uid != "undefined"))
-                newItemsList << new ClockItem(name, days, soundtype, soundname, soundfile,
-                                              snooze, active, hour, minute, uid);
+            newItemsList << new ClockItem(name, days, soundtype, soundname, soundfile, snooze, active, hour, minute, uid);
         }
     }
     else if(m_type == ListofTimers)
