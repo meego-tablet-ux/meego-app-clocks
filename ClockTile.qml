@@ -55,7 +55,7 @@ ExpandoBox {
 
             Timer {
                 interval: 100
-                running: true
+                running: window.isActiveWindow
                 repeat: true
                 onTriggered: clock.timeChanged()
             }

@@ -51,7 +51,7 @@ Text {
 
     Timer {
         interval: 6000
-        running: true
+        running: window.isActiveWindow
         repeat: true
         onTriggered: root.timeChanged()
     }
