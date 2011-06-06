@@ -12,7 +12,8 @@ CONFIG += qt \
     link_pkgconfig
 PKGCONFIG += gconf-2.0 \
     libkcalcoren \
-    libmkcal
+    libmkcal \
+    connman-qt4
 TARGET = $$qtLibraryTarget($$TARGET)
 DESTDIR = $$TARGET
 OBJECTS_DIR = .obj
@@ -21,14 +22,12 @@ MOC_DIR = .moc
 # Input
 SOURCES += clocks.cpp \
     clockitem.cpp \
-    clocklistmodel.cpp \
-    clockproxy.cpp
+    clocklistmodel.cpp
 OTHER_FILES += \
     qmldir
 HEADERS += clocks.h \
     clockitem.h \
-    clocklistmodel.h \
-    clockproxy.h
+    clocklistmodel.h
 
 qmlfiles.files += *.qml *.js i18n
 qmlfiles.path += $$INSTALL_ROOT/usr/share/$$PROJECT_NAME

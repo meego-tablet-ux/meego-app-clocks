@@ -12,13 +12,11 @@
 #include <kcalcoren/ksystemtimezone.h>
 #include "clocklistmodel.h"
 
-#define CONNMAN_SERVICE "net.connman"
-#define CONNMAN_CLOCK_INTERFACE CONNMAN_SERVICE ".Clock"
-
 using namespace std;
 
 ClockListModel::ClockListModel(QObject *parent)
-    : QAbstractListModel(parent), settings("MeeGo", "meego-app-clocks")
+    : QAbstractListModel(parent), settings("MeeGo", "meego-app-clocks"),
+    mClockModel(0)
 {
     QHash<int, QByteArray> roles;
     roles.insert(ClockItem::ID, "itemid");
@@ -36,8 +34,6 @@ ClockListModel::ClockListModel(QObject *parent)
     roles.insert(ClockItem::Hour, "hour");
     roles.insert(ClockItem::Minute, "minute");
     setRoleNames(roles);
-
-    mClockProxy = new ClockProxy(CONNMAN_SERVICE, "/", QDBusConnection::systemBus(), this);
 
     calendar = new ExtendedCalendar(QLatin1String("UTC"));
     calendarPtr = ExtendedCalendar::Ptr(calendar);
@@ -106,22 +102,18 @@ void ClockListModel::setType(const int type)
         int gmt = 0;
         QString name = localzonename;
         QString title = localzonename;
-        if (!mClockProxy->isValid()) {
-            qCritical("unable to connect to " CONNMAN_CLOCK_INTERFACE);
-        } else {
-            QDBusPendingReply<QVariantMap> reply = mClockProxy->GetProperties();
-            reply.waitForFinished();
-            if (reply.isError())
-                qCritical() << CONNMAN_CLOCK_INTERFACE ":" << reply.error().name() << reply.error().message();
-            else {
-                title = reply.value().value("Timezone").toString();
-                KTimeZone zone = KSystemTimeZones::zone(title);
-                name = cleanTZName(title);
-                gmt = zone.currentOffset(Qt::UTC)/3600;
-            }
+        mClockModel = new ClockModel();
+        connect(mClockModel, SIGNAL(timezoneChanged()),
+                this, SLOT(timezoneChanged()));
+        if (!mClockModel->timezone().isEmpty()) {
+            title = mClockModel->timezone();
+            KTimeZone zone = KSystemTimeZones::zone(title);
+            name = cleanTZName(title);
+            gmt = zone.currentOffset(Qt::UTC)/3600;
         }
         localzone = new ClockItem(name, title, gmt);
         newItemsList << localzone;
+
 
         if(!settings.contains("firstuse"))
         {
@@ -203,6 +195,17 @@ void ClockListModel::setType(const int type)
         endInsertRows();
     }
     emit countChanged(itemsList.count());
+}
+
+void ClockListModel::timezoneChanged()
+{
+    Q_ASSERT(itemsList.size() > 0);
+    ClockItem *item = itemsList[0];
+    item->m_title = mClockModel->timezone();
+    item->m_name = cleanTZName(item->m_title);
+    KTimeZone zone = KSystemTimeZones::zone(item->m_title);
+    item->m_gmtoffset = zone.currentOffset(Qt::UTC)/3600;
+    emit dataChanged(index(0, 0), index(0, 0));
 }
 
 bool ClockListModel::getClock(const QString &id, ClockItem *&item, int &idx)
