@@ -13,13 +13,15 @@ import MeeGo.App.Clocks 0.1
 AppPage {
     id: clocksPage
 
+    property Item __clockItem: null
+
     pageTitle: qsTr("Clocks")
     actionMenuModel: [qsTr("New clock")]
     actionMenuPayload: [1]
     onActionMenuTriggered: {
         if (selectedItem == 1) {
-            locEntry.text = "";
-            newClockDialog.show();
+            __clockItem = newClockComponent.createObject(clocksPage);
+            __clockItem.show();
         }
     }
 
@@ -72,42 +74,44 @@ AppPage {
             delegate: ClockTile { gmt: gmtoffset; city: name }
         }
     }
-    ModalDialog {
-        id: newClockDialog
-        width: 540 + 10
-        height: 260 + 150
-        title: qsTr("Add new clock")
-        acceptButtonText: qsTr("Save")
-        cancelButtonText: qsTr("Cancel")
-        content: Item {
-            anchors.fill: parent
-            Text {
-                id: locLabel
-                anchors { verticalCenter: locEntry.verticalCenter; left: parent.left }
-                anchors { margins: 20 }
-                color: theme_fontColorMedium
-                font.pixelSize: 16
-                text: qsTr("Choose location:")
+    Component {
+        id: newClockComponent
+        ModalDialog {
+            width: 540 + 10
+            height: 260 + 150
+            title: qsTr("Add new clock")
+            acceptButtonText: qsTr("Save")
+            cancelButtonText: qsTr("Cancel")
+            content: Item {
+                anchors.fill: parent
+                Text {
+                    id: locLabel
+                    anchors { verticalCenter: locEntry.verticalCenter; left: parent.left }
+                    anchors { margins: 20 }
+                    color: theme_fontColorMedium
+                    font.pixelSize: 16
+                    text: qsTr("Choose location:")
+                }
+                TextEntry {
+                    id: locEntry
+                    anchors { top: parent.top; left: parent.left; right: parent.right }
+                    anchors { leftMargin: 166; topMargin: 35; rightMargin: 35 }
+                    font.pixelSize: 18
+                    onTextChanged: timezoneList.filter(text)
+                }
+                TimezoneList {
+                    id: timezoneList
+                    anchors { top: locEntry.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
+                    anchors { leftMargin: 167; rightMargin: 36; bottomMargin: 30 }
+                }
             }
-            TextEntry {
-                id: locEntry
-                anchors { top: parent.top; left: parent.left; right: parent.right }
-                anchors { leftMargin: 166; topMargin: 35; rightMargin: 35 }
-                font.pixelSize: 18
-                onTextChanged: timezoneList.filter(text)
-            }
-            TimezoneList {
-                id: timezoneList
-                anchors { top: locEntry.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
-                anchors { leftMargin: 167; rightMargin: 36; bottomMargin: 30 }
-            }
-        }
-        onAccepted: {
-            if ((timezoneList.currentItem != undefined)
-                && (locEntry.text != "")) {
-                if (!clockListModel.addClock(timezoneList.currentItem.selectedname, timezoneList.currentItem.selectedtitle, timezoneList.currentItem.selectedgmt)) {
-                    dupeDialog.city = timezoneList.currentItem.selectedname;
-                    dupeDialog.show();
+            onAccepted: {
+                if ((timezoneList.currentItem != undefined)
+                    && (locEntry.text != "")) {
+                    if (!clockListModel.addClock(timezoneList.currentItem.selectedname, timezoneList.currentItem.selectedtitle, timezoneList.currentItem.selectedgmt)) {
+                        dupeDialog.city = timezoneList.currentItem.selectedname;
+                        dupeDialog.show();
+                    }
                 }
             }
         }
