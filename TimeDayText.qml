@@ -19,7 +19,10 @@ Text {
     property int seconds: 0
     property int day: 0
 
-    Component.onCompleted: timeChanged()
+    Component.onCompleted: {
+        timeChanged();
+        clocksPage.minutesTick.connect(timeChanged);
+    }
 
     function timeChanged() {
         var date = new Date;
@@ -47,12 +50,5 @@ Text {
         } else {
             return 0;
         }
-    }
-
-    Timer {
-        interval: 6000
-        running: window.isActiveWindow
-        repeat: true
-        onTriggered: root.timeChanged()
     }
 }

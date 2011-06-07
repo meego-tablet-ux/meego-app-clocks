@@ -23,6 +23,26 @@ AppPage {
         }
     }
 
+    signal secondsTick()
+    signal minutesTick()
+
+    Timer {
+        interval: 1000
+        running: window.isActiveWindow
+        repeat: true
+        property int __seconds: 0
+
+        onTriggered: {
+            var date = new Date();
+            if (date.getSeconds() < __seconds) {
+                clocksPage.minutesTick();
+            }
+            __seconds = date.getSeconds();
+            clocksPage.secondsTick();
+        }
+    }
+
+
     Rectangle {
         anchors.fill: parent
         color: "#EEEEEE" //TODO: get color from theme

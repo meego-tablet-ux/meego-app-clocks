@@ -44,20 +44,16 @@ ExpandoBox {
             anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
             anchors.margins: 20
 
-            Component.onCompleted: timeChanged()
+            Component.onCompleted: {
+                timeChanged();
+                clocksPage.secondsTick.connect(timeChanged);
+            }
 
             function timeChanged() {
                 var date = new Date;
                 hours = gmt ? ((date.getUTCHours() + gmt + 24)%24) : date.getUTCHours();
                 minutes = gmt ? date.getUTCMinutes() + ((gmt % 1) * 60) : date.getMinutes();
                 seconds = date.getUTCSeconds();
-            }
-
-            Timer {
-                interval: 1000
-                running: window.isActiveWindow
-                repeat: true
-                onTriggered: clock.timeChanged()
             }
 
         }
