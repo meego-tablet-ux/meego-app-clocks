@@ -80,6 +80,8 @@ void ClockListModel::clearData()
 QString ClockListModel::cleanTZName(QString title) const
 {
     QStringList temp = title.split("/", QString::SkipEmptyParts);
+    if (temp.isEmpty())
+        return title;
     QString res = temp.last();
     res.replace("_", " ");
     return res;
