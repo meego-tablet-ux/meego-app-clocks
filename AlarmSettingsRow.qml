@@ -26,7 +26,7 @@ Item {
 
     Loader {
         id: loader
-        anchors { top: parent.top; left: parent.left; right: parent.right }
+        anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom }
         anchors.leftMargin: 166 - 20
     }
 }
