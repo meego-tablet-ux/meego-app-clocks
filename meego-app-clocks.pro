@@ -1,4 +1,4 @@
-TRANSLATIONS += *.qml
+TRANSLATIONS += *.qml *.js
 VERSION = 0.3.7
 PROJECT_NAME = meego-app-clocks
 
