@@ -33,7 +33,10 @@ qmlfiles.files += *.qml *.js i18n
 qmlfiles.path += $$INSTALL_ROOT/usr/share/$$PROJECT_NAME
 qmldir.files += $$TARGET
 qmldir.path += $$[QT_INSTALL_IMPORTS]/MeeGo/App
-INSTALLS += qmldir qmlfiles
+desktop.files += meego-app-clocks.desktop
+desktop.path += $$INSTALL_ROOT/usr/share/applications/
+
+INSTALLS += qmldir qmlfiles desktop
 
 dist.commands += rm -fR $${PROJECT_NAME}-$${VERSION} &&
 dist.commands += git clone . $${PROJECT_NAME}-$${VERSION} &&
