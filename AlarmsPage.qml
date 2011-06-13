@@ -85,13 +85,13 @@ AppPage {
     }
 
     function deleteAlarm(id) {
-        confirmDelete.id = id;
+        confirmDelete.alarmId = id;
         confirmDelete.show();
     }
 
     ModalMessageBox {
         id: confirmDelete
-        property string id
+        property string alarmId
         width: 400
         height: 250
         title: qsTr("Delete alarm")
@@ -100,6 +100,6 @@ AppPage {
         cancelButtonText: qsTr("Cancel")
         acceptButtonImage: "image://themedimage/widgets/common/button/button-negative"
         acceptButtonImagePressed: "image://themedimage/widgets/common/button/button-negative-pressed"
-        onAccepted: clockListModel.destroyItemByID(id)
+        onAccepted: clockListModel.destroyItemByID(alarmId)
     }
 }
