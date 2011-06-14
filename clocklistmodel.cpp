@@ -10,13 +10,13 @@
 #include <QDebug>
 #include <QtDBus/QtDBus>
 #include <kcalcoren/ksystemtimezone.h>
+#include <clockmodel.h>
 #include "clocklistmodel.h"
 
 using namespace std;
 
 ClockListModel::ClockListModel(QObject *parent)
-    : QAbstractListModel(parent), settings("MeeGo", "meego-app-clocks"),
-    mClockModel(0)
+    : QAbstractListModel(parent), settings("MeeGo", "meego-app-clocks")
 {
     QHash<int, QByteArray> roles;
     roles.insert(ClockItem::ID, "itemid");
@@ -104,8 +104,8 @@ void ClockListModel::setType(const int type)
         int gmt = 0;
         QString name = localzonename;
         QString title = localzonename;
-        mClockModel = new ClockModel();
-        connect(mClockModel, SIGNAL(timezoneChanged()),
+        mClockModel.reset(new ClockModel());
+        connect(mClockModel.data(), SIGNAL(timezoneChanged()),
                 this, SLOT(timezoneChanged()));
         if (!mClockModel->timezone().isEmpty()) {
             title = mClockModel->timezone();
@@ -304,13 +304,13 @@ QString ClockListModel::calendarAlarm(const QString &name, const int days,
     eventAlarm->setEnabled(active);
     coreEvent->addAlarm( eventAlarm );
 
-    QBitArray *qb = new QBitArray(10);
+    QBitArray qb(10);
     for(int i = 0; i < 7; i++)
     {
-        qb->setBit(i,(days>>i)&0x1);
+        qb.setBit(i,(days>>i)&0x1);
     }
     KCalCore::Recurrence* newRecurrence = coreEvent->recurrence();
-    newRecurrence->setWeekly(1,*qb, 1);
+    newRecurrence->setWeekly(1, qb, 1);
 
     calendarPtr->addEvent(coreEvent,nuid);
     storage->save();

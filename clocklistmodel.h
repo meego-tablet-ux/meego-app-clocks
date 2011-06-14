@@ -17,7 +17,6 @@
 #include <extendedstorage.h>
 #include <notebook.h>
 #include "clockitem.h"
-#include <clockmodel.h>
 
 using namespace mKCal;
 
@@ -88,7 +87,7 @@ protected:
 
     /* the master list contains all the photos found through tracker */
     QList<ClockItem *> itemsList;
-    ClockModel *mClockModel;
+    QScopedPointer<class ClockModel> mClockModel;
     ClockItem *localzone;
     int m_type;
     ExtendedCalendar *calendar;
