@@ -30,7 +30,8 @@ Text {
         minutes = date.getMinutes();
         seconds = date.getUTCSeconds();
         day = (date.getUTCDay() + dayOffset() + 7) % 7;
-        text = qsTr("%1 %2").arg(Code.formatTime(hours,minutes)).arg(Code.weekday[(day - 1 + 7) % 7]);
+        //: %1 is formatted time, %2 is weekday
+        text = qsTr("%1 %2", "TimeWeekday").arg(Code.formatTime(hours,minutes)).arg(Code.weekday[(day - 1 + 7) % 7]);
     }
 
     // calculate the weekday offset from UTC since we have no

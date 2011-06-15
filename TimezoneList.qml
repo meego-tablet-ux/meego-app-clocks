@@ -69,6 +69,7 @@ Rectangle {
                 anchors.rightMargin: 14
                 color: theme_fontColorMedium
                 font.pixelSize: 14
+                //: %1 is "" or "+", %2 is GMT offset
                 text: qsTr("(GMT %1%2)").arg(gmtoffset<0?"":"+").arg(gmtoffset)
             }
             MouseArea {
