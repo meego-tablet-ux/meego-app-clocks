@@ -39,7 +39,7 @@ Rectangle {
             // these are used to propagate data to the
             // create/edit clocks logic
             property int selectedgmt: gmtoffset
-            property string selectedname: city
+            property string selectedname: locationname
             property string selectedtitle: title
 
             source: {
@@ -60,7 +60,7 @@ Rectangle {
                 font.pixelSize: 18
                 elide: Text.ElideRight
                 width: parent.width - 100
-                text: title
+                text: locationname
             }
             Text {
                 anchors.baseline: parent.verticalCenter
@@ -69,8 +69,7 @@ Rectangle {
                 anchors.rightMargin: 14
                 color: theme_fontColorMedium
                 font.pixelSize: 14
-                //: %1 is "" or "+", %2 is GMT offset
-                text: qsTr("(GMT %1%2)").arg(gmtoffset<0?"":"+").arg(gmtoffset)
+                text: gmtname
             }
             MouseArea {
                 id: mouseArea

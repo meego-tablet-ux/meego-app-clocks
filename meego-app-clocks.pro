@@ -13,7 +13,8 @@ CONFIG += qt \
 PKGCONFIG += gconf-2.0 \
     libkcalcoren \
     libmkcal \
-    connman-qt4
+    connman-qt4 \
+    icu-i18n
 TARGET = $$qtLibraryTarget($$TARGET)
 DESTDIR = $$TARGET
 OBJECTS_DIR = .obj

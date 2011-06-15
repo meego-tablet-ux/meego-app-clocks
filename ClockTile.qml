@@ -84,8 +84,7 @@ ExpandoBox {
             Text {
                 id: gmtLabel
                 font.pixelSize: 16
-                //: %1 is empty or +, %2 is GMT offset
-                text: qsTr("(GMT %1%2)").arg(gmt<0?"":"+").arg(gmt)
+                text: gmtname
             }
         }
 

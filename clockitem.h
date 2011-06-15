@@ -39,7 +39,8 @@ public:
         Snooze = Qt::UserRole + 11,
         Active = Qt::UserRole + 12,
         Hour = Qt::UserRole + 13,
-        Minute = Qt::UserRole + 14
+        Minute = Qt::UserRole + 14,
+        GMTName = Qt::UserRole + 15
     };
 
     enum ItemType {

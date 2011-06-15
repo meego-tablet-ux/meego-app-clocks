@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QtDBus/QtDBus>
 #include <kcalcoren/ksystemtimezone.h>
+#include <unicode/timezone.h>
 #include "clocklistmodel.h"
 
 using namespace std;
@@ -33,6 +34,7 @@ ClockListModel::ClockListModel(QObject *parent)
     roles.insert(ClockItem::Active, "active");
     roles.insert(ClockItem::Hour, "hour");
     roles.insert(ClockItem::Minute, "minute");
+    roles.insert(ClockItem::GMTName, "gmtname");
     setRoleNames(roles);
 
     calendar = new ExtendedCalendar(QLatin1String("UTC"));
@@ -521,8 +523,21 @@ QVariant ClockListModel::data(const QModelIndex &index, int role) const
     if (role == ClockItem::Title)
         return item->m_title;
 
-    if (role == ClockItem::Name)
-        return item->m_name;
+    if (role == ClockItem::Name) {
+        TimeZone *zone = TimeZone::createTimeZone(UnicodeString(static_cast<const UChar*>(item->m_title.utf16())));
+        UnicodeString result;
+        zone->getDisplayName(TRUE, TimeZone::GENERIC_LOCATION, result);
+        delete zone;
+        return QString(reinterpret_cast<const QChar*>(result.getBuffer()), result.length());
+    }
+
+    if (role == ClockItem::GMTName) {
+        TimeZone *zone = TimeZone::createTimeZone(UnicodeString(static_cast<const UChar*>(item->m_title.utf16())));
+        UnicodeString result;
+        zone->getDisplayName(TRUE, TimeZone::LONG_GMT, result);
+        delete zone;
+        return QString(reinterpret_cast<const QChar*>(result.getBuffer()), result.length());
+    }
 
     if (role == ClockItem::GMTOffset)
         return item->m_gmtoffset;
