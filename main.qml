@@ -23,5 +23,26 @@ Window {
     bookMenuPayload: [ clocksPage, alarmsPage ]
     Component { id: clocksPage; ClocksPage {} }
     Component { id: alarmsPage; AlarmsPage {} }
-    Component.onCompleted: { switchBook(clocksPage) }
+
+    property string indexValueName: "window.bookMenuSelectedIndex"  // i18n ok
+
+    SaveRestoreState {
+        id: windowState
+        onSaveRequired: {
+            // Save the book page we're on.
+            setValue(indexValueName, window.bookMenuSelectedIndex)
+            sync()
+        }
+    }
+
+    Component.onCompleted: {
+        // Load the page we were previously on if necessary.  Otherwise, load the clocks
+        // page by default.
+
+        var i = (windowState.restoreRequired ? windowState.value(indexValueName, 0) : 0)
+
+        switchBook(bookMenuPayload[i])
+    }
+
+    onBookMenuSelectedIndexChanged: windowState.invalidate()
 }

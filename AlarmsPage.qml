@@ -14,11 +14,33 @@ AppPage {
     id: alarmsPage
 
     property Item __alarmItem: null
+    property string alarmToDeleteId: "NULL"   // For save/restore support.
 
     pageTitle: qsTr("Alarms")
 
     actionMenuModel: [qsTr("New alarm")]
     actionMenuPayload: [1]
+
+    SaveRestoreState {
+        id: alarmsPageState
+        onSaveRequired: {
+            setValue("alarmsPage.showNewAlarmComponent", __alarmItem == null ? 1 : 0)
+            sync()
+        }
+    }
+
+    Component.onCompleted: {
+        if (alarmsPageState.restoreRequired) {
+            if (alarmsPageState.value("alarmsPage.showNewAlarmComponent", 0)) {
+                __alarmItem = newAlarmComponent.createObject(alarmsPage);
+                __alarmItem.show();
+            } else if(value("alarmsPage."), 0) {
+                confirmDelete.id = id;
+                confirmDelete.show();
+            }
+        }
+    }
+
     onActionMenuTriggered: {
         if (selectedItem == 1) {
             __alarmItem = newAlarmComponent.createObject(alarmsPage);
@@ -92,6 +114,7 @@ AppPage {
     ModalMessageBox {
         id: confirmDelete
         property string alarmId
+
         width: 400
         height: 250
         title: qsTr("Delete alarm")

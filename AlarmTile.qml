@@ -16,10 +16,23 @@ ExpandoBox {
     property bool a_active: headerItem.on
     property bool __suppress: false
 
+
+    SaveRestoreState {
+        id: alarmTileState
+        onSaveRequired: {
+            setValue("alarmTile.expanded." + name, root.expanded)
+            sync()
+        }
+    }
+
     Component.onCompleted: {
         __suppress = true;
         headerItem.on = active;
         __suppress = false;
+
+        if (alarmTileState.restoreRequired) {
+            root.expanded = alarmTileState.value("alarmTile.expanded." + name, false)
+        }
     }
 
     headerComponent: Item {

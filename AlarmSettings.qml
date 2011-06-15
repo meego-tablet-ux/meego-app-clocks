@@ -24,6 +24,40 @@ Column {
 
     spacing: 10
 
+    SaveRestoreState {
+        id: alarmState
+
+        onSaveRequired: {
+            setValue("alarm.name."      + a_name, parent.a_name)
+            setValue("alarm.hour."      + a_name, parent.a_hour)
+            setValue("alarm.minute."    + a_name, parent.a_minute)
+            setValue("alarm.days."      + a_name, parent.a_days)
+            setValue("alarm.snooze."    + a_name, parent.a_snooze)
+            setValue("alarm.soundtype." + a_name, parent.a_soundtype)
+            setValue("alarm.soundname." + a_name, parent.a_soundname)
+            setValue("alarm.sounduri."  + a_name, parent.a_sounduri)
+            setValue("alarm.songname."  + a_name, parent.a_songname)
+            setValue("alarm.songuri."   + a_name, parent.a_songuri)
+
+            sync()
+        }
+    }
+
+    Component.onCompleted: {
+        if (alarmState.restoreRequired) {
+            parent.a_name      = value("alarm.name."      + a_name)
+            parent.a_hour      = value("alarm.hour."      + a_name)
+            parent.a_minute    = value("alarm.minute."    + a_name)
+            parent.a_days      = value("alarm.days."      + a_name)
+            parent.a_snooze    = value("alarm.snooze."    + a_name)
+            parent.a_soundtype = value("alarm.soundtype." + a_name)
+            parent.a_soundname = value("alarm.soundname." + a_name)
+            parent.a_sounduri  = value("alarm.sounduri."  + a_name)
+            parent.a_songname  = value("alarm.songname."  + a_name)
+            parent.a_songuri   = value("alarm.songuri."   + a_name)
+        }
+    }
+
     Theme { id: theme }
 
     AlarmSettingsRow {
@@ -36,6 +70,9 @@ Column {
 
     AlarmSettingsRow {
         title: qsTr("Alarm time:")
+
+        property int __showTimePicker: 0 // Save/restore does weird things with "bool".
+
         component: Rectangle {
             height: 45
             Text {
@@ -47,10 +84,48 @@ Column {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: timepicker.show()
+                onClicked: {
+                    __showTimePicker= 1
+                    timepicker.show()
+                }
+            }
+
+            SaveRestoreState {
+                id: alarmTimeState
+
+                onSaveRequired: {
+                    setValue("alarmTime.showTimePicker", __showTimePicker)
+                    sync()
+                }
+            }
+
+            Component.onCompleted: {
+                if (alarmTimeState.restoreRequired && value("alarmTime.showTimePicker"))
+                    timepicker.show()
             }
         }
-        TimePicker { id: timepicker; hr24: true }
+
+        TimePicker {
+            id: timepicker
+            hr24: true
+
+            SaveRestoreState {
+                id: alarmTimePickerState
+
+                onSaveRequired: {
+                    setValue("alarmTimePicker.hours",   timepicker.hours)
+                    setValue("alarmTimePicker.minutes", timepicker.minutes)
+                    sync()
+                }
+            }
+
+            Component.onCompleted: {
+                if (alarmTimePickerState.restoreRequired) {
+                    hours   = value("alarmTimePicker.hours")
+                    minutes = value("alarmTimePicker.minutes")
+                }
+            }
+        }
     }
 
     AlarmSettingsRow {
@@ -141,6 +216,23 @@ Column {
 
     AlarmSettingsRow {
         title: qsTr("Music track:")
+
+        property int __showMusicPicker: 0
+
+        SaveRestoreState {
+            id: musicTrackState
+
+            onSaveRequired: {
+                setValue("musicTrack.showMusicPicker", __showMusicPicker)
+                sync()
+            }
+        }
+
+        Component.onCompleted: {
+            if (musicTrackState.restoreRequired && value("musicTrack.showMusicPicker"))
+                musicpicker.show()
+        }
+
         component: Rectangle {
             height: 45
             Text {
@@ -156,6 +248,7 @@ Column {
             }
         }
         visible: a_soundtype == 1
+
         MusicPicker {
             id: musicpicker
             selectSongs: true
