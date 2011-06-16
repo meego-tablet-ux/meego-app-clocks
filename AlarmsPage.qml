@@ -8,6 +8,7 @@
 
 import Qt 4.7
 import MeeGo.Components 0.1
+import MeeGo.Media 0.1
 import MeeGo.App.Clocks 0.1
 
 AppPage {
@@ -56,8 +57,24 @@ AppPage {
         Item {
             id: panelArea
             anchors.horizontalCenter: parent.horizontalCenter
-            width: window.isLandscape ? Math.min(listview.totalWidth + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.width) : parent.width
-            height: window.isLandscape ?  parent.height : Math.min(listview.totalHeight + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.height)
+            width: {
+                if(listview.count == 0) {
+                    return parent.width
+                } else if (window.isLandscape) {
+                    return  Math.min(listview.totalWidth + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.width)
+                } else {
+                    return  parent.width
+                }
+            }
+            height: {
+                if(listview.count == 0) {
+                    return parent.height
+                } else if (window.isLandscape) {
+                    return parent.height
+                } else {
+                    return Math.min(listview.totalHeight + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.height)
+                }
+            }
         BorderImage {
             id: panel
             anchors.fill: parent
@@ -74,9 +91,20 @@ AppPage {
                 id: clockListModel
                 type: ClockListModel.ListofAlarms
             }
+            NoContent {
+                anchors.fill: parent
+                visible: !listview.visible
+                title: qsTr("You have no alarms")
+                button1Text: qsTr("Create a new alarm")
+                onButton1Clicked: {
+                    __alarmItem = newAlarmComponent.createObject(alarmsPage);
+                    __alarmItem.show();
+                }
+            }
 
             ListView {
                 id: listview
+                visible: count > 0
                 property int listPadding: 2
                 property int totalWidth: contentWidth + 2*listPadding + 2*2
                 property int totalHeight: contentHeight + 2*listPadding + 2 + 5
