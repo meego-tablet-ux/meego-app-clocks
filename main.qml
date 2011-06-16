@@ -14,8 +14,8 @@ Window {
     id: window
 
     // simplify orientation code
-    property bool isLandscape: orientation == 1 || orientation == 3
-    property bool isPortrait: orientation == 0 || orientation == 2
+    property bool isLandscape: window.inLandscape || window.inInvertedLandscape
+    property bool isPortrait: window.inPortrait || window.inInvertedPortrait
 
     showToolBarSearch: false
 
