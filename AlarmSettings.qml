@@ -69,6 +69,7 @@ Column {
     }
 
     AlarmSettingsRow {
+        id: settingsRow
         title: qsTr("Alarm time:")
 
         property int __showTimePicker: 0 // Save/restore does weird things with "bool".
@@ -85,7 +86,7 @@ Column {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    __showTimePicker= 1
+                    settingsRow.__showTimePicker= 1
                     timepicker.show()
                 }
             }
@@ -94,7 +95,7 @@ Column {
                 id: alarmTimeState
 
                 onSaveRequired: {
-                    setValue("alarmTime.showTimePicker", __showTimePicker)
+                    setValue("alarmTime.showTimePicker", settingsRow.__showTimePicker)
                     sync()
                 }
             }
