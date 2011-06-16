@@ -45,9 +45,10 @@ AppPage {
     }
 
 
-    Rectangle {
+    Image {
         anchors.fill: parent
-        color: "black" //TODO: get color from theme
+        source: "image://themedimage/widgets/common/backgrounds/global-background-texture"
+        clip: true
 
         BorderImage {
             id: panel
