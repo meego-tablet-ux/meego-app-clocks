@@ -59,6 +59,8 @@ AppPage {
             anchors.bottomMargin: window.isLandscape ? 10 : 0
             anchors.leftMargin: window.isPortrait ? 10 : 0
             anchors.rightMargin: window.isPortrait ? 10 : 0
+		    contentX: window.isPortrait ? 10 : 0
+		    contentY: window.isPortrait ? 0 : 10
             spacing: 2
             orientation: window.isLandscape ? ListView.Horizontal : ListView.Vertical
             clip: true
