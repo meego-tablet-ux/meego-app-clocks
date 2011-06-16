@@ -39,11 +39,11 @@ Rectangle {
             // these are used to propagate data to the
             // create/edit clocks logic
             property int selectedgmt: gmtoffset
-            property string selectedname: city
+            property string selectedname: locationname
             property string selectedtitle: title
 
             source: {
-                if (index == timezoneListModel.count - 1)
+                if (index == listView.count - 1)
                     return mouseArea.pressed ? "image://themedimage/widgets/common/list/list-single-active" : "image://themedimage/widgets/common/list/list-single-inactive";
                 else
                     return mouseArea.pressed ? "image://themedimage/widgets/common/list/list-active" : "image://themedimage/widgets/common/list/list-inactive";
