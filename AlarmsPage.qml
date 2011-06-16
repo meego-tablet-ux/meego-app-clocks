@@ -53,6 +53,12 @@ AppPage {
         source: "image://themedimage/widgets/common/backgrounds/global-background-texture"
         clip: true
 
+        Item {
+            id: panelArea
+            anchors.horizontalCenter: parent.horizontalCenter
+            property int listPadding: 10
+            width: window.isLandscape ? Math.min(listview.totalWidth + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.width) : parent.width
+            height: window.isLandscape ?  parent.height : Math.min(listview.totalHeight + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.height)
         BorderImage {
             id: panel
             anchors.fill: parent
@@ -72,6 +78,8 @@ AppPage {
 
             ListView {
                 id: listview
+                property int totalWidth: window.isLandscape ? (contentWidth + 2*panelArea.listPadding + anchors.leftMargin + anchors.rightMargin): contentWidth
+                property int totalHeight: window.isLandscape ? contentHeight : (contentHeight + 2*panelArea.listPadding + anchors.leftMargin + anchors.rightMargin)
                 anchors.fill: parent
                 anchors.topMargin: (window.isLandscape ? 5 : 2)
                 anchors.leftMargin: (window.isLandscape ? 2 : 5)
@@ -86,16 +94,17 @@ AppPage {
                     contentY = tmp;
                 }
                 clip: true
-                interactive: window.isLandscape ? (width < contentWidth) : (height < contentHeight)
+                interactive: window.isLandscape ? (width < contentWidth + 2*panelArea.listPadding) : (height < contentHeight + 2*panelArea.listPadding)
 
                 model: clockListModel
 
                 //spacers to create illusion of 10px border at ends
-                header: Item { width: 10; height: 10 }
-                footer: Item { width: 10; height: 10 }
+                header: Item { width: panelArea.listPadding; height: panelArea.listPadding }
+                footer: Item { width: panelArea.listPadding; height: panelArea.listPadding }
 
                 delegate: AlarmTile { }
             }
+        }
         }
     }
 
