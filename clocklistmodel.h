@@ -13,15 +13,11 @@
 #include <QtCore/QtCore>
 #include <QtCore/QObject>
 #include <QSettings>
-#include <extendedcalendar.h>
-#include <extendedstorage.h>
-#include <notebook.h>
-#include "clockitem.h"
+#include <ekcal/ekcal-storage.h>
 #include <clockmodel.h>
+#include "clockitem.h"
 
-using namespace mKCal;
-
-class ClockListModel: public QAbstractListModel
+class ClockListModel: public QAbstractListModel, public eKCal::StorageObserver
 {
     Q_OBJECT
     Q_ENUMS(ModelType)
@@ -85,17 +81,22 @@ protected:
               const int soundtype, const QString &soundname, const QString &soundfile,
               const int snooze, const bool active,
               const int hour, const int minute, QString uid = "");
+    QList<ClockItem *> getAlarmsFromCalendar() const;
+    void setClockItems(const QList<ClockItem *> &items);
+    /* eKCal::StorageObserver */
+    void loadingComplete(bool success, const QString &error);
+    void savingComplete(bool success, const QString &error);
 
     /* the master list contains all the photos found through tracker */
     QList<ClockItem *> itemsList;
     ClockModel *mClockModel;
     ClockItem *localzone;
     int m_type;
-    ExtendedCalendar *calendar;
-    ExtendedCalendar::Ptr calendarPtr;
-    ExtendedStorage::Ptr storage;
-    Notebook* notebook;
-    QString nuid;
+    /* Indicate if the calendar storage is done loading since the operation is
+     * asynchronous */
+    bool m_initialized;
+    eKCal::EStorage::Ptr m_storage;
+    KCalCore::Calendar::Ptr m_calendar;
 };
 
 #endif // CLOCKLISTMODEL_H
