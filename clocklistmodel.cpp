@@ -113,7 +113,7 @@ void ClockListModel::setType(const int type)
             title = mClockModel->timezone();
             KTimeZone zone = KSystemTimeZones::zone(title);
             name = cleanTZName(title);
-            gmt = zone.currentOffset(Qt::UTC)/3600;
+            gmt = zone.currentOffset(Qt::UTC);
         }
         localzone = new ClockItem(name, title, gmt);
         newItemsList << localzone;
@@ -131,7 +131,7 @@ void ClockListModel::setType(const int type)
                 KTimeZone zone = KSystemTimeZones::zone(defaultzones[i]);
                 settings.setValue(QString("00%1/name").arg(i+1), cleanTZName(zone.name()));
                 settings.setValue(QString("00%1/title").arg(i+1), zone.name());
-                settings.setValue(QString("00%1/gmt").arg(i+1), zone.currentOffset(Qt::UTC)/3600);
+                settings.setValue(QString("00%1/gmt").arg(i+1), zone.currentOffset(Qt::UTC));
             }
             settings.endGroup();
         }
@@ -143,8 +143,7 @@ void ClockListModel::setType(const int type)
             QString name = settings.value(ids[i] + "/name", "undefined").toString();
             QString title = settings.value(ids[i] + "/title", "undefined").toString();
             int gmt = settings.value(ids[i] + "/gmt", 100).toInt();
-            if((gmt < 24)&&(gmt > -24)&&(title != "undefined")&&(name != "undefined"))
-                newItemsList << new ClockItem(name, title, gmt);
+            newItemsList << new ClockItem(name, title, gmt);
         }
         settings.endGroup();
     }
@@ -208,7 +207,7 @@ void ClockListModel::timezoneChanged()
     item->m_title = mClockModel->timezone();
     item->m_name = cleanTZName(item->m_title);
     KTimeZone zone = KSystemTimeZones::zone(item->m_title);
-    item->m_gmtoffset = zone.currentOffset(Qt::UTC)/3600;
+    item->m_gmtoffset = zone.currentOffset(Qt::UTC);
     emit dataChanged(index(0, 0), index(0, 0));
 }
 

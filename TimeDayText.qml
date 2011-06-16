@@ -26,8 +26,8 @@ Text {
 
     function timeChanged() {
         var date = new Date;
-        hours = tz ? ((date.getUTCHours() + tz + 24)%24) : date.getUTCHours();
-        minutes = date.getMinutes();
+        hours = tz ? ((date.getUTCHours() + (tz/3600) + 24)%24) : date.getUTCHours();
+        minutes = tz ? ((date.getUTCMinutes() + (tz/60) + 24*3600) % 60) : date.getMinutes();
         seconds = date.getUTCSeconds();
         day = (date.getUTCDay() + dayOffset() + 7) % 7;
         //: %1 is formatted time, %2 is weekday
@@ -42,7 +42,7 @@ Text {
         // calculations below are in "normalized" utc offsets:
         // +0 to +23 hrs, with 0 set at international date line
         var nMidnight = (12 - date.getUTCHours() + 24) % 24;
-        var nTz = (tz + 12 + 24) % 24;
+        var nTz = (tz/3600 + 12 + 24) % 24;
         var nUtc = 12;
         if (nTz >= nMidnight && nUtc < nMidnight) {
             return 1;
