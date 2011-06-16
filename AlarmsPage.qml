@@ -77,7 +77,7 @@ AppPage {
 
             ListView {
                 id: listview
-                property int listPadding: 10
+                property int listPadding: 2
                 property int totalWidth: contentWidth + 2*listPadding + 2*2
                 property int totalHeight: contentHeight + 2*listPadding + 2 + 5
                 anchors.fill: parent

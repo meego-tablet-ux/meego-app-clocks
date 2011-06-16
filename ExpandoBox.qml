@@ -20,8 +20,9 @@ Item {
     property Item detailsItem: null
     property string orientation: "horizontal"
     property bool expanded: false
-    property color bgColorExpanded: "#eaf6fb"
+    property color bgColorExpanded: theme_highlightColor
     property color bgColorCollapsed: "white"
+    property alias bgOpacity: bgRectangle.opacity
     property bool enabled: true
 
     // hints provide the detailsComponent geometry, so the expandobox
@@ -47,19 +48,23 @@ Item {
     }
 
     Rectangle {
-        id: header
-
+        id: bgRectangle
         anchors.top: parent.top
         anchors.left: parent.left
         width: headerItem.width
         height: headerItem.height
         color: expanded ? bgColorExpanded : bgColorCollapsed
-
+    }
+    Item {
+        id: header
+        anchors.top: parent.top
+        anchors.left: parent.left
+        width: headerItem.width
+        height: headerItem.height
         MouseArea {
             anchors.fill: parent
             onClicked: if (root.enabled) expanded = !expanded;
         }
-
     }
 
     Rectangle {

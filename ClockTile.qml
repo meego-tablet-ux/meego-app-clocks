@@ -31,12 +31,17 @@ ExpandoBox {
     }
 
     enabled: index != 0
-    bgColorCollapsed: index == 0 ? "#DDDDDD" : "white"
+    bgColorCollapsed: index == 0 ? theme_highlightColor : "white"
+    bgOpacity: index == 0 || expanded ? 1 : 0
 
     headerComponent: Item {
         width: root.orientation == "vertical" ? 189 : listview.width
         height: root.orientation == "vertical" ? listview.height : 164
 
+        ListSeparator {
+            visible: index > 0
+            isHorizontal: root.orientation == "horizontal"
+        }
         Clock {
             id: clock
             anchors.centerIn: root.orientation == "vertical" ? parent : undefined
