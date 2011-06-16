@@ -85,7 +85,6 @@ AppPage {
                 anchors.leftMargin: (window.isLandscape ? 2 : 5)
                 anchors.rightMargin: (window.isLandscape ? 2 : 5)
                 anchors.bottomMargin: (window.isLandscape ? 8 : 5)
-                spacing: 2
                 orientation: window.isLandscape ? ListView.Horizontal : ListView.Vertical
                 onOrientationChanged: {
                     // maintain place in listview
@@ -97,6 +96,17 @@ AppPage {
                 interactive: window.isLandscape ? (width < (contentWidth + 2*listview.listPadding) ) : (height < (contentHeight + 2*listview.listPadding))
 
                 model: clockListModel
+
+                onCountChanged: {
+                    //work-around issue where contentWidth/contentHeight is not changed after last alarm is removed
+                    if(count == 0) {
+                        if(window.isLandscape) {
+                            contentWidth = 10;
+                        } else {
+                            contentHeight = 10;
+                        }
+                    }
+                }
 
                 //spacers to create illusion of 10px border at ends
                 header: Item { width: listview.listPadding; height: listview.listPadding }
