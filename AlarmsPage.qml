@@ -56,7 +56,6 @@ AppPage {
         Item {
             id: panelArea
             anchors.horizontalCenter: parent.horizontalCenter
-            property int listPadding: 10
             width: window.isLandscape ? Math.min(listview.totalWidth + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.width) : parent.width
             height: window.isLandscape ?  parent.height : Math.min(listview.totalHeight + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.height)
         BorderImage {
@@ -78,13 +77,14 @@ AppPage {
 
             ListView {
                 id: listview
-                property int totalWidth: window.isLandscape ? (contentWidth + 2*panelArea.listPadding + anchors.leftMargin + anchors.rightMargin): contentWidth
-                property int totalHeight: window.isLandscape ? contentHeight : (contentHeight + 2*panelArea.listPadding + anchors.leftMargin + anchors.rightMargin)
+                property int listPadding: 10
+                property int totalWidth: contentWidth + 2*listPadding + 2*2
+                property int totalHeight: contentHeight + 2*listPadding + 2 + 5
                 anchors.fill: parent
                 anchors.topMargin: (window.isLandscape ? 5 : 2)
                 anchors.leftMargin: (window.isLandscape ? 2 : 5)
                 anchors.rightMargin: (window.isLandscape ? 2 : 5)
-                anchors.bottomMargin: (window.isLandscape ? 5 : 2)
+                anchors.bottomMargin: (window.isLandscape ? 8 : 5)
                 spacing: 2
                 orientation: window.isLandscape ? ListView.Horizontal : ListView.Vertical
                 onOrientationChanged: {
@@ -94,13 +94,13 @@ AppPage {
                     contentY = tmp;
                 }
                 clip: true
-                interactive: window.isLandscape ? (width < contentWidth + 2*panelArea.listPadding) : (height < contentHeight + 2*panelArea.listPadding)
+                interactive: window.isLandscape ? (width < (contentWidth + 2*listview.listPadding) ) : (height < (contentHeight + 2*listview.listPadding))
 
                 model: clockListModel
 
                 //spacers to create illusion of 10px border at ends
-                header: Item { width: panelArea.listPadding; height: panelArea.listPadding }
-                footer: Item { width: panelArea.listPadding; height: panelArea.listPadding }
+                header: Item { width: listview.listPadding; height: listview.listPadding }
+                footer: Item { width: listview.listPadding; height: listview.listPadding }
 
                 delegate: AlarmTile { }
             }
