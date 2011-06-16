@@ -1,5 +1,5 @@
 TRANSLATIONS += *.qml *.js
-VERSION = 0.3.8
+VERSION = 0.3.9
 PROJECT_NAME = meego-app-clocks
 
 TEMPLATE = lib
@@ -14,7 +14,7 @@ PKGCONFIG += gconf-2.0 \
     libkcalcoren \
     libmkcal \
     connman-qt4 \
-    icu-i18n
+    icu-i18n icu-uc
 TARGET = $$qtLibraryTarget($$TARGET)
 DESTDIR = $$TARGET
 OBJECTS_DIR = .obj
