@@ -106,8 +106,7 @@ AppPage {
                 }
             }
             onAccepted: {
-                if ((timezoneList.currentItem != undefined)
-                    && (locEntry.text != "")) {
+                if ((timezoneList.currentItem != undefined)) {
                     if (!clockListModel.addClock(timezoneList.currentItem.selectedname, timezoneList.currentItem.selectedtitle, timezoneList.currentItem.selectedgmt)) {
                         dupeDialog.city = timezoneList.currentItem.selectedname;
                         dupeDialog.show();

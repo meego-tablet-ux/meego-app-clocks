@@ -15,6 +15,14 @@ Rectangle {
     color: "white"
 
     function filter(arg) { timezoneListModel.filterOut(arg); }
+    function selectTitle(arg) {
+        for (var i = timezoneListModel.count - 1; i >= 0; i--) {
+            if (timezoneListModel.getData(i, Labs.TimezoneListModel.Title) === arg) {
+                listView.currentIndex = i;
+                listView.positionViewAtIndex(i, ListView.Beginning);
+            }
+        }
+    }
     
     Labs.TimezoneListModel { id: timezoneListModel }
 
@@ -43,10 +51,26 @@ Rectangle {
             property string selectedtitle: title
 
             source: {
-                if (index == timezoneListModel.count - 1)
-                    return mouseArea.pressed ? "image://themedimage/widgets/common/list/list-single-active" : "image://themedimage/widgets/common/list/list-single-inactive";
-                else
-                    return mouseArea.pressed ? "image://themedimage/widgets/common/list/list-active" : "image://themedimage/widgets/common/list/list-inactive";
+                // FIXME: temporarily disabled singleton listitem graphic
+                // due to annoying QML spam about non-NOTIFYable properties
+
+                //if (index == timezoneListModel.count - 1) {
+                //    if (mouseArea.pressed) {
+                //        return "image://themedimage/widgets/common/list/list-single-active";
+                //    } else if (ListView.isCurrentItem) {
+                //        return "image://themedimage/widgets/common/list/list-single-selected";
+                //    } else {
+                //        return "image://themedimage/widgets/common/list/list-single-inactive";
+                //    }
+                //} else {
+                    if (mouseArea.pressed) {
+                        return "image://themedimage/widgets/common/list/list-active";
+                    } else if (ListView.isCurrentItem) {
+                        return "image://themedimage/widgets/common/list/list-selected";
+                    } else {
+                        return "image://themedimage/widgets/common/list/list-inactive";
+                    }
+                //}
             }
             border { top: 2; bottom: 2; left: 1; right: 1 }
             width: parent.width
@@ -76,7 +100,6 @@ Rectangle {
                 anchors.fill: parent
                 onClicked: {
                     listView.currentIndex = index;
-                    locEntry.text = title;
                 }
             }
         }

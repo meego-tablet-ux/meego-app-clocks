@@ -132,7 +132,6 @@ ExpandoBox {
                     anchors { leftMargin: 166; topMargin: 10 }
                     font.pixelSize: 18
                     anchors.rightMargin: root.orientation == "vertical" ? 10 : 75
-                    Component.onCompleted: text = title
                     onTextChanged: timezoneList.filter(text)
                 }
                 TimezoneList {
@@ -141,6 +140,7 @@ ExpandoBox {
                     anchors.leftMargin: 167
                     anchors.rightMargin: root.orientation == "vertical" ? 11 : 76
                     anchors.bottomMargin: 10
+                    Component.onCompleted: selectTitle(title);
                 }
             }
             Row {
