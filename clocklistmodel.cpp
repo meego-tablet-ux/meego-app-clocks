@@ -542,11 +542,15 @@ QVariant ClockListModel::data(const QModelIndex &index, int role) const
         return item->m_title;
 
     if (role == ClockItem::Name) {
-        TimeZone *zone = TimeZone::createTimeZone(UnicodeString(static_cast<const UChar*>(item->m_title.utf16())));
-        UnicodeString result;
-        zone->getDisplayName(TRUE, TimeZone::GENERIC_LOCATION, result);
-        delete zone;
-        return QString(reinterpret_cast<const QChar*>(result.getBuffer()), result.length());
+        if (m_type == ListofClocks) {
+            TimeZone *zone = TimeZone::createTimeZone(UnicodeString(static_cast<const UChar*>(item->m_title.utf16())));
+            UnicodeString result;
+            zone->getDisplayName(TRUE, TimeZone::GENERIC_LOCATION, result);
+            delete zone;
+            return QString(reinterpret_cast<const QChar*>(result.getBuffer()), result.length());
+        } else {
+            return item->m_name;
+        }
     }
 
     if (role == ClockItem::GMTName) {
