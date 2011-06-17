@@ -17,7 +17,8 @@
 using namespace std;
 
 ClockListModel::ClockListModel(QObject *parent)
-    : QAbstractListModel(parent), settings("MeeGo", "meego-app-clocks")
+    : QAbstractListModel(parent), settings("MeeGo", "meego-app-clocks"),
+    m_type(-1), m_initialized(false)
 {
     QHash<int, QByteArray> roles;
     roles.insert(ClockItem::ID, "itemid");
@@ -37,28 +38,15 @@ ClockListModel::ClockListModel(QObject *parent)
     roles.insert(ClockItem::GMTName, "gmtname");
     setRoleNames(roles);
 
-    calendar = new ExtendedCalendar(QLatin1String("UTC"));
-    calendarPtr = ExtendedCalendar::Ptr(calendar);
-    storage = calendar->defaultStorage(calendarPtr);
-    storage->open();
+    m_storage = eKCal::EStorage::localStorage(KCalCore::IncidenceBase::TypeEvent,
+                                            "alarmsnotebook",
+                                            true);
+    m_calendar = m_storage->calendar();
+    // Adjust the time spec since the local spec may not be UTC
+    m_calendar->setTimeSpec(KDateTime::Spec::UTC());
 
-    Notebook::List nbList = storage->notebooks();
-    for (int i = 0; i < nbList.count(); i++) {
-            Notebook::Ptr nbPtr = nbList.at(i);
-            Notebook *nb = nbPtr.data();
-            if (nb->name() == "alarmsnotebook") {
-                    notebook = nb;
-                    break;
-            }
-    }
-    if (!notebook) {
-            notebook = new Notebook("alarmsnotebook", "");
-            Notebook::Ptr notebookPtr = Notebook::Ptr(notebook);
-            storage->addNotebook(notebookPtr);
-    }
-    nuid = notebook->uid();
-
-    m_type = -1;
+    m_storage->registerObserver(this);
+    m_storage->startLoading(); // Asynchronous
 }
 
 ClockListModel::~ClockListModel()
@@ -149,38 +137,7 @@ void ClockListModel::setType(const int type)
     }
     else if(m_type == ListofAlarms)
     {
-        storage->loadNotebookIncidences(nuid);
-
-        KCalCore::Event::List eventList;
-            eventList = calendarPtr->rawEvents(KCalCore::EventSortStartDate, KCalCore::SortDirectionAscending);
-
-        for (int i = 0; i < eventList.count(); i++)
-        {
-            KCalCore::Event *event = eventList.at(i).data();
-            QStringList desc = event->description().split("!");
-            QString name = event->summary();
-            int soundtype = (desc.isEmpty())?0:desc.at(0).toInt();
-            QString soundname = (desc.count() < 2)?"":desc.at(1);
-            QString uid = event->uid();
-            KCalCore::Recurrence* theRecurrence = event->recurrence();
-            QBitArray qb = theRecurrence->days();
-            int days = 0;
-            for(int i = 0; i < 7; i++)
-                if(qb.at(i))
-                    days |= (1<<i);
-            KCalCore::Alarm::List alarms = event->alarms();
-            if (alarms.count() < 1)
-                continue;
-            KCalCore::Alarm::Ptr alarm = alarms.at(0);
-            QString soundfile = alarm->audioFile();
-            int snooze = alarm->snoozeTime().asSeconds()/60;
-            bool active = alarm->enabled();
-            QTime thetime = alarm->time().time();
-            int hour = thetime.hour() + 1;
-            int minute = thetime.minute();
-
-            newItemsList << new ClockItem(name, days, soundtype, soundname, soundfile, snooze, active, hour, minute, uid);
-        }
+        newItemsList = getAlarmsFromCalendar();
     }
     else if(m_type == ListofTimers)
     {
@@ -191,6 +148,17 @@ void ClockListModel::setType(const int type)
         return;
     }
 
+   // Set the new clock items
+   setClockItems(newItemsList);
+}
+
+/*!
+ * Set the new clock items in the model to \a items.
+ * The caller should make sure clearData() is called before setting the new items.
+ */
+void ClockListModel::setClockItems(const QList<ClockItem *> &newItemsList)
+{
+    Q_ASSERT(itemsList.isEmpty());
     if(!newItemsList.isEmpty())
     {
         beginInsertRows(QModelIndex(), 0, newItemsList.count()-1);
@@ -198,6 +166,57 @@ void ClockListModel::setType(const int type)
         endInsertRows();
     }
     emit countChanged(itemsList.count());
+}
+
+/*!
+ * Loads the alarms from the calendar and return them.
+ *
+ * \return The list of alarms in the calendar as ClockItems, an empty list if the
+ * calendar is not ready yet.
+ */
+QList<ClockItem *> ClockListModel::getAlarmsFromCalendar() const
+{
+    Q_ASSERT (m_type == ListofAlarms);
+    QList<ClockItem *> newItemsList;
+
+    if (!m_initialized) {
+        // The storage is not done loading, the alarms will be retrieved once it is
+        return newItemsList;
+    }
+
+    // The calendar is initialized, retrieve the alarms from it
+    KCalCore::Event::List eventList;
+    eventList = m_calendar->rawEvents(KCalCore::EventSortStartDate, KCalCore::SortDirectionAscending);
+
+    for (int i = 0; i < eventList.count(); i++)
+    {
+        KCalCore::Event *event = eventList.at(i).data();
+        QStringList desc = event->description().split("!");
+        QString name = event->summary();
+        int soundtype = (desc.isEmpty())?0:desc.at(0).toInt();
+        QString soundname = (desc.count() < 2)?"":desc.at(1);
+        QString uid = event->uid();
+        KCalCore::Recurrence* theRecurrence = event->recurrence();
+        QBitArray qb = theRecurrence->days();
+        int days = 0;
+        for(int i = 0; i < 7; i++)
+            if(qb.at(i))
+                days |= (1<<i);
+        KCalCore::Alarm::List alarms = event->alarms();
+        if (alarms.count() < 1)
+            continue;
+        KCalCore::Alarm::Ptr alarm = alarms.at(0);
+        QString soundfile = alarm->audioFile();
+        int snooze = alarm->snoozeTime().asSeconds()/60;
+        bool active = alarm->enabled();
+        QTime thetime = alarm->time().time();
+        int hour = thetime.hour() + 1;
+        int minute = thetime.minute();
+
+        newItemsList << new ClockItem(name, days, soundtype, soundname, soundfile, snooze, active, hour, minute, uid);
+    }
+
+    return newItemsList;
 }
 
 void ClockListModel::timezoneChanged()
@@ -262,6 +281,8 @@ QString ClockListModel::calendarAlarm(const QString &name, const int days,
       const int snooze, const bool active,
       const int hour, const int minute, QString uid)
 {
+    Q_ASSERT(m_initialized);
+
     KCalCore::Event::Ptr coreEvent;
 
     if(uid.isEmpty())
@@ -271,9 +292,8 @@ QString ClockListModel::calendarAlarm(const QString &name, const int days,
     }
     else
     {
-        storage->loadNotebookIncidences(nuid);
         /* this is an EDIT call, load the alarm item */
-        coreEvent = KCalCore::Event::Ptr(calendarPtr->event(uid));
+        coreEvent = m_calendar->event(uid);
         /* if the database lacks this item, create a new one */
         if(coreEvent == NULL)
         {
@@ -313,8 +333,8 @@ QString ClockListModel::calendarAlarm(const QString &name, const int days,
     KCalCore::Recurrence* newRecurrence = coreEvent->recurrence();
     newRecurrence->setWeekly(1, qb, 1);
 
-    calendarPtr->addEvent(coreEvent,nuid);
-    storage->save();
+    m_calendar->addEvent(coreEvent);
+    m_storage->save();
     return coreEvent->uid();
 }
 
@@ -488,14 +508,13 @@ void ClockListModel::destroyItemByID(const QString &id)
 
     if(item->m_type == ClockItem::AlarmItem)
     {
-        storage->loadNotebookIncidences(nuid);
-        KCalCore::Event::Ptr ptr = KCalCore::Event::Ptr(calendarPtr->event(item->m_uid));
+        KCalCore::Event::Ptr ptr = m_calendar->event(item->m_uid);
         if(ptr == NULL)
             qDebug() << "alarm not found in calendar db: " << item->m_name;
         else
         {
-            calendarPtr->deleteEvent( ptr );
-            storage->save();
+            m_calendar->deleteEvent( ptr );
+            m_storage->save();
         }
     }
     beginRemoveRows(QModelIndex(), idx, idx);
@@ -616,3 +635,20 @@ void ClockListModel::moveRow(int rowsrc, int rowdst)
     endMoveRows();
 }
 
+/*! \reimp */
+void ClockListModel::loadingComplete(bool success, const QString &error)
+{
+    qDebug() << Q_FUNC_INFO << success << error;
+    m_initialized = success;
+    if(m_initialized && m_type == ListofAlarms) {
+        // The calendar is done loading and the model is supposed to contain the alarms
+        // so we retrieve them from the calendar and populate the model.
+        setClockItems(getAlarmsFromCalendar());
+    }
+}
+
+/*! \reimp */
+void ClockListModel::savingComplete(bool success, const QString &error)
+{
+    qDebug() << Q_FUNC_INFO << success << error;
+}

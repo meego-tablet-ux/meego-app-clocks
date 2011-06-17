@@ -11,8 +11,7 @@ CONFIG += qt \
     dbus \
     link_pkgconfig
 PKGCONFIG += gconf-2.0 \
-    libkcalcoren \
-    libmkcal \
+    libekcal \
     connman-qt4 \
     icu-i18n icu-uc
 TARGET = $$qtLibraryTarget($$TARGET)
