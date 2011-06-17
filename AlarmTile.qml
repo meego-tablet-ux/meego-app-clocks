@@ -35,6 +35,8 @@ ExpandoBox {
         }
     }
 
+    bgOpacity: expanded ? 1 : 0
+
     headerComponent: Item {
         property alias on: activeToggle.on
 
@@ -52,6 +54,11 @@ ExpandoBox {
         }
         width: root.orientation == "vertical" ? 189 : listview.width
         height: root.orientation == "vertical" ? listview.height : 164
+
+        ListSeparator {
+            visible: index > 0
+            isHorizontal: root.orientation == "horizontal"
+        }
 
         Clock {
             id: clock

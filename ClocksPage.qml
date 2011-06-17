@@ -45,35 +45,63 @@ AppPage {
     }
 
 
-    Rectangle {
+    Image {
         anchors.fill: parent
-        color: "#EEEEEE" //TODO: get color from theme
+        source: "image://themedimage/widgets/common/backgrounds/global-background-texture"
+        clip: true
 
-        ListView {
-            id: listview
+        Item {
+            id: panelArea
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: window.isLandscape ? Math.min(listview.totalWidth + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.width) : parent.width
+            height: window.isLandscape ?  parent.height : Math.min(listview.totalHeight + panel.anchors.leftMargin + panel.anchors.rightMargin, parent.height)
+        BorderImage {
+            id: panel
             anchors.fill: parent
-            anchors.topMargin: window.isLandscape ? 10 : 0
-            anchors.bottomMargin: window.isLandscape ? 10 : 0
-            anchors.leftMargin: window.isPortrait ? 10 : 0
-            anchors.rightMargin: window.isPortrait ? 10 : 0
-		    contentX: window.isPortrait ? 10 : 0
-		    contentY: window.isPortrait ? 0 : 10
-            spacing: 2
-            orientation: window.isLandscape ? ListView.Horizontal : ListView.Vertical
-            clip: true
-
+            anchors.topMargin: 8
+            anchors.leftMargin: 8
+            anchors.rightMargin: 8
+            anchors.bottomMargin: 5
+            source: "image://themedimage/widgets/apps/media/content-background"
+            border.left:   8
+            border.top:    8
+            border.bottom: 8
+            border.right:  8
             ClockListModel {
                 id: clockListModel
                 type: ClockListModel.ListofClocks
             }
 
-            model: clockListModel
+            ListView {
+                id: listview
+                property int listPadding: 2
+                property int totalWidth: contentWidth + 2*listPadding + 2*2
+                property int totalHeight: contentHeight + 2*listPadding + 2 + 5
+                anchors.fill: parent
+                anchors.topMargin: (window.isLandscape ? 5 : 2)
+                anchors.leftMargin: (window.isLandscape ? 2 : 5)
+                anchors.rightMargin: (window.isLandscape ? 2 : 5)
+                anchors.bottomMargin: (window.isLandscape ? 8 : 5)
+                spacing: 2
+                orientation: window.isLandscape ? ListView.Horizontal : ListView.Vertical
+                onOrientationChanged: {
+                    // maintain place in listview
+                    var tmp = contentX;
+                    contentX = contentY;
+                    contentY = tmp;
+                }
+                clip: true
+                interactive: window.isLandscape ? (width < (contentWidth + 2*listview.listPadding) ) : (height < (contentHeight + 2*listview.listPadding))
 
-            //spacers to create illusion of 10px border at ends
-            header: Item { width: 10; height: 10 }
-            footer: Item { width: 10; height: 10 }
+                model: clockListModel
 
-            delegate: ClockTile { gmt: gmtoffset; city: name }
+                //spacers to create illusion of 10px border at ends
+                header: Item { width: listview.listPadding; height: listview.listPadding }
+                footer: Item { width: listview.listPadding; height: listview.listPadding }
+
+                delegate: ClockTile { gmt: gmtoffset; city: name }
+            }
+        }
         }
     }
     Component {

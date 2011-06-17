@@ -51,18 +51,15 @@ Rectangle {
             property string selectedtitle: title
 
             source: {
-                // FIXME: temporarily disabled singleton listitem graphic
-                // due to annoying QML spam about non-NOTIFYable properties
-
-                //if (index == timezoneListModel.count - 1) {
-                //    if (mouseArea.pressed) {
-                //        return "image://themedimage/widgets/common/list/list-single-active";
-                //    } else if (ListView.isCurrentItem) {
-                //        return "image://themedimage/widgets/common/list/list-single-selected";
-                //    } else {
-                //        return "image://themedimage/widgets/common/list/list-single-inactive";
-                //    }
-                //} else {
+                if (index == listView.count - 1) {
+                    if (mouseArea.pressed) {
+                        return "image://themedimage/widgets/common/list/list-single-active";
+                    } else if (ListView.isCurrentItem) {
+                        return "image://themedimage/widgets/common/list/list-single-selected";
+                    } else {
+                        return "image://themedimage/widgets/common/list/list-single-inactive";
+                    }
+                } else {
                     if (mouseArea.pressed) {
                         return "image://themedimage/widgets/common/list/list-active";
                     } else if (ListView.isCurrentItem) {
@@ -70,7 +67,7 @@ Rectangle {
                     } else {
                         return "image://themedimage/widgets/common/list/list-inactive";
                     }
-                //}
+                }
             }
             border { top: 2; bottom: 2; left: 1; right: 1 }
             width: parent.width
