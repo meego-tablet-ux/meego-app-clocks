@@ -10,6 +10,7 @@ import Qt 4.7
 import MeeGo.Components 0.1
 import MeeGo.Media 0.1
 import MeeGo.App.Clocks 0.1
+import "strings.js" as Strings
 
 AppPage {
     id: alarmsPage
@@ -94,8 +95,8 @@ AppPage {
             NoContent {
                 anchors.fill: parent
                 visible: !listview.visible
-                title: qsTr("You have no alarms")
-                button1Text: qsTr("Create a new alarm")
+                title: Strings.string02
+                button1Text: Strings.string03
                 onButton1Clicked: {
                     __alarmItem = newAlarmComponent.createObject(alarmsPage);
                     __alarmItem.show();
