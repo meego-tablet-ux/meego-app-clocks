@@ -100,26 +100,11 @@ ExpandoBox {
 
         ToggleButton {
             id: activeToggle
-            anchors.left: root.orientation == "vertical" ? parent.left : undefined
+            anchors.horizontalCenter: root.orientation == "vertical" ? parent.horizontalCenter : undefined
             anchors.bottom: root.orientation == "vertical" ? parent.bottom : undefined
-            anchors.right: root.orientation == "horizontal" ? triangle.left : undefined
+            anchors.right: root.orientation == "horizontal" ? parent.right : undefined
             anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
             anchors.margins: 20
-        }
-
-        Image {
-            id: triangle
-            anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
-            anchors.right: parent.right
-            anchors.bottom: root.orientation == "vertical" ? parent.bottom : undefined
-            anchors.margins: 30
-            source: "image://themedimage/widgets/common/notifications/grabby"
-            rotation: {
-                if (root.orientation == "horizontal")
-                    return expanded ? 0 : 180
-                else
-                    return expanded ? 270 : 90
-            }
         }
     }
 

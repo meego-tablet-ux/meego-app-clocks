@@ -66,7 +66,7 @@ ExpandoBox {
         Column {
             id: label
             anchors.left: root.orientation == "vertical" ? parent.left : clock.right
-            anchors.right: root.orientation == "vertical" ? parent.right : triangle.left
+            anchors.right: parent.right
             anchors.top: root.orientation == "vertical" ? parent.top : undefined
             anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
             anchors.margins: 20
@@ -90,22 +90,6 @@ ExpandoBox {
                 id: gmtLabel
                 font.pixelSize: 16
                 text: gmtname
-            }
-        }
-
-        Image {
-            id: triangle
-            visible: index != 0
-            anchors.verticalCenter: root.orientation == "horizontal" ? parent.verticalCenter : undefined
-            anchors.right: parent.right
-            anchors.bottom: root.orientation == "vertical" ? parent.bottom : undefined
-            anchors.margins: 30
-            source: "image://themedimage/widgets/common/notifications/grabby"
-            rotation: {
-                if (root.orientation == "horizontal")
-                    return expanded ? 0 : 180
-                else
-                    return expanded ? 270 : 90
             }
         }
     }
