@@ -116,23 +116,23 @@ AppPage {
                 anchors.fill: parent
                 Text {
                     id: locLabel
-                    anchors { verticalCenter: locEntry.verticalCenter; left: parent.left }
-                    anchors { margins: 20 }
+                    anchors { top: parent.top; left: parent.left }
+                    anchors { leftMargin: 35 }
                     color: theme_fontColorMedium
                     font.pixelSize: 16
                     text: qsTr("Choose location:")
                 }
                 TextEntry {
                     id: locEntry
-                    anchors { top: parent.top; left: parent.left; right: parent.right }
-                    anchors { leftMargin: 166; topMargin: 35; rightMargin: 35 }
+                    anchors { top: locLabel.bottom; left: parent.left; right: parent.right }
+                    anchors { leftMargin: 35; topMargin: 20; rightMargin: 35 }
                     font.pixelSize: 18
                     onTextChanged: timezoneList.filter(text)
                 }
                 TimezoneList {
                     id: timezoneList
                     anchors { top: locEntry.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
-                    anchors { leftMargin: 167; rightMargin: 36; bottomMargin: 30 }
+                    anchors { leftMargin: 36; rightMargin: 36; bottomMargin: 30 }
                 }
             }
             onAccepted: {

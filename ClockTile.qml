@@ -95,11 +95,11 @@ ExpandoBox {
     }
 
     detailsWidthHint: 505
-    detailsHeightHint: 290
+    detailsHeightHint: 390
 
     detailsComponent: Item {
         width: root.orientation == "vertical" ? 505 : listview.width
-        height: root.orientation == "vertical" ? listview.height : 290
+        height: root.orientation == "vertical" ? listview.height : 390
         Item {
             anchors.fill: parent
             anchors.margins: 5
@@ -109,24 +109,26 @@ ExpandoBox {
                 color: "#d5ecf6"
                 Text {
                     id: locLabel
-                    anchors { verticalCenter: locEntry.verticalCenter; left: parent.left }
-                    anchors { margins: 20 }
+                    anchors { top: parent.top; left: parent.left }
+                    anchors.topMargin: 35
+                    anchors.leftMargin: root.orientation == "vertical" ? 10 : 75
                     color: theme_fontColorMedium
                     font.pixelSize: 16
                     text: qsTr("Choose location:")
                 }
                 TextEntry {
                     id: locEntry
-                    anchors { top: parent.top; left: parent.left; right: parent.right }
-                    anchors { leftMargin: 166; topMargin: 10 }
+                    anchors { top: locLabel.bottom; left: parent.left; right: parent.right }
+                    anchors.topMargin: 20
                     font.pixelSize: 18
+                    anchors.leftMargin: root.orientation == "vertical" ? 10 : 75
                     anchors.rightMargin: root.orientation == "vertical" ? 10 : 75
                     onTextChanged: timezoneList.filter(text)
                 }
                 TimezoneList {
                     id: timezoneList
                     anchors { top: locEntry.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
-                    anchors.leftMargin: 167
+                    anchors.leftMargin: root.orientation == "vertical" ? 11 : 76
                     anchors.rightMargin: root.orientation == "vertical" ? 11 : 76
                     anchors.bottomMargin: 10
                     Component.onCompleted: selectTitle(title);
@@ -136,7 +138,7 @@ ExpandoBox {
                 id: buttonRow
                 height: 66
                 anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
-                anchors { leftMargin: 166 }
+                anchors.leftMargin: root.orientation == "vertical" ? 10 : 75
                 anchors.rightMargin: root.orientation == "vertical" ? 10 : 75
                 spacing: 10
                 Button {
