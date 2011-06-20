@@ -14,19 +14,19 @@ Item {
     property alias item: loader.item
     anchors.left: parent.left
     anchors.right: parent.right
-    height: loader.height
+    height: text.height + loader.height
 
     Text {
         id: text
-        anchors {right: loader.left; verticalCenter: loader.verticalCenter }
-        anchors.margins: 20
+        anchors { top: parent.top; left: parent.left; right: parent.right }
+        anchors.margins: 0
         color: theme_fontColorMedium
         font.pixelSize: 16
     }
 
     Loader {
         id: loader
-        anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom }
-        anchors.leftMargin: 166 - 20
+        anchors { top: text.bottom; left: parent.left; right: parent.right }
+        anchors.margins: 0
     }
 }

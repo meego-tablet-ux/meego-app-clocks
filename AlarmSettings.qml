@@ -163,6 +163,7 @@ Column {
     AlarmSettingsRow {
         title: qsTr("Snooze duration:")
         component: DropDown {
+            height: 45
             replaceDropDownTitle: true
             titleColor: "black"
             model: [qsTr("Never"),
@@ -184,6 +185,7 @@ Column {
         id: typecontrol
         title: qsTr("Type:")
         component: DropDown {
+            height: 45
             titleColor: "black"
             replaceDropDownTitle: true
             model: [qsTr("Sound effect"), qsTr("Music track")]
@@ -195,6 +197,7 @@ Column {
     AlarmSettingsRow {
         title: qsTr("Sound effect:")
         component: DropDown {
+            height: 45
             titleColor: "black"
             replaceDropDownTitle: true
             model: ["Blurp",

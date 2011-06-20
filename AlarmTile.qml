@@ -109,11 +109,11 @@ ExpandoBox {
     }
 
     detailsWidthHint: 505
-    detailsHeightHint: 440
+    detailsHeightHint: 540
 
     detailsComponent: Item {
         width: root.orientation == "vertical" ? 505 : listview.width
-        height: root.orientation == "vertical" ? listview.height : 440
+        height: root.orientation == "vertical" ? listview.height : 540
         Item {
             anchors.fill: parent
             anchors.margins: 5
@@ -124,8 +124,9 @@ ExpandoBox {
                 AlarmSettings {
                     id: alarmSettings
                     anchors.fill: parent
-                    anchors { topMargin: 20; bottomMargin: 20; leftMargin: 20 }
-                    anchors.rightMargin: root.orientation == "vertical" ? 20 : 70
+                    anchors { topMargin: 10; bottomMargin: 20 }
+                    anchors.leftMargin: root.orientation == "vertical" ? 10 : 75
+                    anchors.rightMargin: root.orientation == "vertical" ? 10 : 75
 
                     a_name: name
                     a_hour: hour
@@ -143,8 +144,8 @@ ExpandoBox {
                 id: buttonRow
                 height: 66
                 anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
-                anchors { leftMargin: 166 }
-                anchors.rightMargin: root.orientation == "vertical" ? 10 : 75
+                anchors.leftMargin: root.orientation == "vertical" ? 0 : 75
+                anchors.rightMargin: root.orientation == "vertical" ? 0 : 75
                 spacing: 10
                 Button {
                     anchors.verticalCenter: parent.verticalCenter

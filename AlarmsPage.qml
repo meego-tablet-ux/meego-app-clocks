@@ -150,15 +150,15 @@ AppPage {
     Component {
         id: newAlarmComponent
         ModalDialog {
-            width: 540 + 10
-            height: 375 + 150
+            width: 550
+            height: 600
             title: qsTr("Add new alarm")
             acceptButtonText: qsTr("Save")
             cancelButtonText: qsTr("Cancel")
             content: AlarmSettings {
                 id: alarmSettings
                 anchors.fill: parent
-                anchors { topMargin: 20; bottomMargin: 20; leftMargin: 40; rightMargin: 40 }
+                anchors { topMargin: 0; bottomMargin: 20; leftMargin: 40; rightMargin: 40 }
             }
             onAccepted: {
                 clockListModel.addAlarm(alarmSettings.a_name,
