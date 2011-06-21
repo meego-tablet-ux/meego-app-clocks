@@ -8,6 +8,7 @@
 
 import Qt 4.7
 import MeeGo.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import "functions.js" as Code
 
 Column {
@@ -23,6 +24,10 @@ Column {
     property string a_songuri: ""
 
     spacing: 10
+
+    Labs.LocaleHelper {
+        id: localeHelper
+    }
 
     SaveRestoreState {
         id: alarmState
@@ -136,6 +141,7 @@ Column {
             Repeater {
                 model: 7
                 Item {
+                    property int day: (index + localeHelper.firstDayOfWeek - 1) % 7
                     x: index * parent.width/7
                     width: parent.width/7
                     height: parent.height
@@ -143,16 +149,16 @@ Column {
                     Text {
                         anchors.centerIn: parent
                         font.pixelSize: 16
-                        text: Code.weekdayShort[index]
-                        color: (a_days&(0x1 << index)) ? "black" : "#AAAAAA"
+                        text: Code.weekdayShort[day]
+                        color: (a_days&(0x1 << day)) ? "black" : "#AAAAAA"
                     }
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            if (a_days & (0x1 << index))
-                                a_days &= ~(0x1 << index)
+                            if (a_days & (0x1 << day))
+                                a_days &= ~(0x1 << day)
                             else
-                                a_days |= (0x1 << index)
+                                a_days |= (0x1 << day)
                         }
                     }
                 }
