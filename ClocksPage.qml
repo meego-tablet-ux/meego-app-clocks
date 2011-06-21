@@ -82,7 +82,6 @@ AppPage {
                 anchors.leftMargin: (window.isLandscape ? 2 : 5)
                 anchors.rightMargin: (window.isLandscape ? 2 : 5)
                 anchors.bottomMargin: (window.isLandscape ? 8 : 5)
-                spacing: 2
                 orientation: window.isLandscape ? ListView.Horizontal : ListView.Vertical
                 onOrientationChanged: {
                     // maintain place in listview
