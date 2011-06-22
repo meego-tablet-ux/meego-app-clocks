@@ -88,8 +88,10 @@ ExpandoBox {
             }
             Text {
                 id: gmtLabel
-                font.pixelSize: 16
+                font.pixelSize: 14
                 text: gmtname
+                width: parent.width
+                elide: Text.ElideRight
             }
         }
     }
