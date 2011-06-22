@@ -8,6 +8,7 @@
 
 import Qt 4.7
 import MeeGo.Components 0.1
+import MeeGo.Labs.Components 0.1 as Labs
 import MeeGo.App.Clocks 0.1
 import "functions.js" as Code
 
@@ -15,7 +16,6 @@ ExpandoBox {
     id: root
     property bool a_active: headerItem.on
     property bool __suppress: false
-
 
     SaveRestoreState {
         id: alarmTileState

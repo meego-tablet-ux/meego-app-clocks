@@ -16,7 +16,7 @@ var weekdayShort = [qsTr("Mon"),
 
 function formatTime(hour, min)
 {
-    return qsTr("%1:%2").arg(hour).arg(min<10?"0"+min:min)
+    return localeHelper.localTime(new Date(2000, 0, 1, hour, min, 0, 0), Labs.LocaleHelper.TimeFull);
 }
 
 function isDay(hour)

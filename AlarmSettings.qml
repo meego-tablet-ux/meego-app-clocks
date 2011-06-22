@@ -25,10 +25,6 @@ Column {
 
     spacing: 10
 
-    Labs.LocaleHelper {
-        id: localeHelper
-    }
-
     SaveRestoreState {
         id: alarmState
 
@@ -113,7 +109,7 @@ Column {
 
         TimePicker {
             id: timepicker
-            hr24: true
+            hr24: localeHelper.timeFormat == Labs.LocaleHelper.TimeFormat24
 
             SaveRestoreState {
                 id: alarmTimePickerState
