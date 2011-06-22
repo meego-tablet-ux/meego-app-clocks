@@ -55,10 +55,15 @@ ExpandoBox {
             }
 
             function timeChanged() {
-                var date = new Date;
-                hours = gmt ? ((date.getUTCHours() + (gmt/3600) + 24)%24) : date.getUTCHours();
-                minutes = gmt ? ((date.getUTCMinutes() + (gmt/60) + 24*3600) % 60) : date.getMinutes();
-                seconds = date.getUTCSeconds();
+                // workaround for https://bugs.meego.com/show_bug.cgi?id=19693
+                try {
+                    var date = new Date;
+                    hours = gmt ? ((date.getUTCHours() + (gmt/3600) + 24)%24) : date.getUTCHours();
+                    minutes = gmt ? ((date.getUTCMinutes() + (gmt/60) + 24*3600) % 60) : date.getMinutes();
+                    seconds = date.getUTCSeconds();
+                } catch (e) {
+                    console.log(e);
+                }
             }
 
         }

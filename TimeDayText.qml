@@ -26,13 +26,18 @@ Text {
     }
 
     function timeChanged() {
-        var date = new Date;
-        hours = tz ? ((date.getUTCHours() + (tz/3600) + 24)%24) : date.getUTCHours();
-        minutes = tz ? ((date.getUTCMinutes() + (tz/60) + 24*3600) % 60) : date.getMinutes();
-        seconds = date.getUTCSeconds();
-        day = (date.getUTCDay() + dayOffset() + 7) % 7;
-        //: %1 is formatted time, %2 is weekday
-        text = qsTr("%1 %2", "TimeWeekday").arg(Code.formatTime(hours,minutes)).arg(Code.weekdayShort[(day - 1 + 7) % 7]);
+        // workaround for https://bugs.meego.com/show_bug.cgi?id=19693
+        try {
+            var date = new Date;
+            hours = tz ? ((date.getUTCHours() + (tz/3600) + 24)%24) : date.getUTCHours();
+            minutes = tz ? ((date.getUTCMinutes() + (tz/60) + 24*3600) % 60) : date.getMinutes();
+            seconds = date.getUTCSeconds();
+            day = (date.getUTCDay() + dayOffset() + 7) % 7;
+            //: %1 is formatted time, %2 is weekday
+            text = qsTr("%1 %2", "TimeWeekday").arg(Code.formatTime(hours,minutes)).arg(Code.weekdayShort[(day - 1 + 7) % 7]);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     // calculate the weekday offset from UTC since we have no
