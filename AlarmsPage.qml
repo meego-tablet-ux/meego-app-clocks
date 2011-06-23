@@ -161,16 +161,22 @@ AppPage {
                 anchors { topMargin: 0; bottomMargin: 20; leftMargin: 40; rightMargin: 40 }
             }
             onAccepted: {
-                clockListModel.addAlarm(alarmSettings.a_name,
-                                        alarmSettings.a_days,
-                                        alarmSettings.a_soundtype,
-                                        alarmSettings.a_soundtype == 0 ? alarmSettings.a_soundname : alarmSettings.a_songname,
-                                        alarmSettings.a_soundtype == 0 ? alarmSettings.a_sounduri : alarmSettings.a_songuri,
-                                        alarmSettings.a_snooze,
-                                        true,
-                                        alarmSettings.a_hour,
-                                        alarmSettings.a_minute);
-                __alarmItem.destroy();
+		if (!alarmSettings.a_name) {
+			showAlert("Error", Strings.string05);
+		} else if (alarmSettings.a_days == 0) {
+			showAlert("Error", Strings.string06);
+		} else {
+			clockListModel.addAlarm(alarmSettings.a_name,
+						alarmSettings.a_days,
+						alarmSettings.a_soundtype,
+						alarmSettings.a_soundtype == 0 ? alarmSettings.a_soundname : alarmSettings.a_songname,
+						alarmSettings.a_soundtype == 0 ? alarmSettings.a_sounduri : alarmSettings.a_songuri,
+						alarmSettings.a_snooze,
+						true,
+						alarmSettings.a_hour,
+						alarmSettings.a_minute);
+			__alarmItem.destroy();
+		}
             }
         }
     }
@@ -178,6 +184,12 @@ AppPage {
     function deleteAlarm(id) {
         confirmDelete.alarmId = id;
         confirmDelete.show();
+    }
+
+    function showAlert(title, message) {
+	alertDialog.title = title;
+        alertDialog.text = message;
+        alertDialog.show();
     }
 
     ModalMessageBox {
@@ -193,5 +205,16 @@ AppPage {
         acceptButtonImage: "image://themedimage/widgets/common/button/button-negative"
         acceptButtonImagePressed: "image://themedimage/widgets/common/button/button-negative-pressed"
         onAccepted: clockListModel.destroyItemByID(alarmId)
+    }
+
+    ModalMessageBox {
+        id: alertDialog
+        width: 400
+        height: 250
+        acceptButtonText: qsTr("OK")
+	showCancelButton: false
+        acceptButtonImage: "image://themedimage/widgets/common/button/button-negative"
+        acceptButtonImagePressed: "image://themedimage/widgets/common/button/button-negative-pressed"
+        onAccepted: __alarmItem.show()
     }
 }
