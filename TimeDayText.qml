@@ -25,6 +25,10 @@ Text {
         clocksPage.minutesTick.connect(timeChanged);
     }
 
+    Component.onDestruction: {
+        clocksPage.minutesTick.disconnect(timeChanged);
+    }
+
     function timeChanged() {
         // workaround for https://bugs.meego.com/show_bug.cgi?id=19693
         try {

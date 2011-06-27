@@ -54,6 +54,10 @@ ExpandoBox {
                 clocksPage.secondsTick.connect(timeChanged);
             }
 
+            Component.onDestruction: {
+                clocksPage.secondsTick.disconnect(timeChanged);
+            }
+
             function timeChanged() {
                 // workaround for https://bugs.meego.com/show_bug.cgi?id=19693
                 try {
