@@ -59,7 +59,6 @@ ExpandoBox {
             }
 
             function timeChanged() {
-                // workaround for https://bugs.meego.com/show_bug.cgi?id=19693
                 try {
                     var date = new Date;
                     hours = gmt ? ((date.getUTCHours() + (gmt/3600) + 24)%24) : date.getUTCHours();

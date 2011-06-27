@@ -30,7 +30,6 @@ Text {
     }
 
     function timeChanged() {
-        // workaround for https://bugs.meego.com/show_bug.cgi?id=19693
         try {
             var date = new Date;
             hours = tz ? ((date.getUTCHours() + (tz/3600) + 24)%24) : date.getUTCHours();
