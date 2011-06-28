@@ -20,6 +20,8 @@ Text {
     property int seconds: 0
     property int day: 0
 
+    onTzChanged: timeChanged()
+
     Component.onCompleted: {
         timeChanged();
         clocksPage.minutesTick.connect(timeChanged);
