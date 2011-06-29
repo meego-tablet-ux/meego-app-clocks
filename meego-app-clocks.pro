@@ -1,5 +1,5 @@
 TRANSLATIONS += *.qml *.js
-VERSION = 0.3.15
+VERSION = 0.3.16
 PROJECT_NAME = meego-app-clocks
 
 TEMPLATE = lib
