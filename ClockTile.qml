@@ -57,6 +57,10 @@ ExpandoBox {
             Component.onDestruction: {
                 clocksPage.secondsTick.disconnect(timeChanged);
             }
+            Connections {
+                target: root
+                onGmtChanged: clock.timeChanged()
+            }
 
             function timeChanged() {
                 try {
