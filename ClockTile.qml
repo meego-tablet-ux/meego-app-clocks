@@ -133,7 +133,7 @@ ExpandoBox {
                 TextEntry {
                     id: locEntry
                     anchors { top: locLabel.bottom; left: parent.left; right: parent.right }
-                    anchors.topMargin: 20
+                    anchors.topMargin: 10
                     font.pixelSize: 18
                     anchors.leftMargin: root.orientation == "vertical" ? 10 : 75
                     anchors.rightMargin: root.orientation == "vertical" ? 10 : 75
@@ -142,6 +142,7 @@ ExpandoBox {
                 TimezoneList {
                     id: timezoneList
                     anchors { top: locEntry.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
+                    anchors.topMargin: 10
                     anchors.leftMargin: root.orientation == "vertical" ? 11 : 76
                     anchors.rightMargin: root.orientation == "vertical" ? 11 : 76
                     anchors.bottomMargin: 10

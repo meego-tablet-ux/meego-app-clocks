@@ -107,7 +107,7 @@ AppPage {
         id: newClockComponent
         ModalDialog {
             width: 540 + 10
-            height: 260 + 150
+            height: 360 + 150
             title: qsTr("Add new clock")
             acceptButtonText: qsTr("Save")
             cancelButtonText: qsTr("Cancel")
@@ -124,14 +124,14 @@ AppPage {
                 TextEntry {
                     id: locEntry
                     anchors { top: locLabel.bottom; left: parent.left; right: parent.right }
-                    anchors { leftMargin: 35; topMargin: 20; rightMargin: 35 }
+                    anchors { leftMargin: 35; topMargin: 10; rightMargin: 35 }
                     font.pixelSize: 18
                     onTextChanged: timezoneList.filter(text)
                 }
                 TimezoneList {
                     id: timezoneList
                     anchors { top: locEntry.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
-                    anchors { leftMargin: 36; rightMargin: 36; bottomMargin: 30 }
+                    anchors { leftMargin: 36; topMargin:10; rightMargin: 36; bottomMargin: 30 }
                 }
             }
             onAccepted: {
