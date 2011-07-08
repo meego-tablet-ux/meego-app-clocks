@@ -42,8 +42,6 @@ ClockListModel::ClockListModel(QObject *parent)
                                             "alarmsnotebook",
                                             true);
     m_calendar = m_storage->calendar();
-    // Adjust the time spec since the local spec may not be UTC
-    m_calendar->setTimeSpec(KDateTime::Spec::UTC());
 
     m_storage->registerObserver(this);
     m_storage->startLoading(); // Asynchronous
@@ -209,7 +207,7 @@ QList<ClockItem *> ClockListModel::getAlarmsFromCalendar() const
         QString soundfile = alarm->audioFile();
         int snooze = alarm->snoozeTime().asSeconds()/60;
         bool active = alarm->enabled();
-        QTime thetime = alarm->time().time();
+        QTime thetime = alarm->time().toLocalZone().time();
         int hour = thetime.hour() + 1;
         int minute = thetime.minute();
 
