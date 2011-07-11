@@ -95,6 +95,8 @@ ExpandoBox {
                 id: gmtLabel
                 font.pixelSize: 16
                 text: Code.daysFriendly(days)
+                width: parent.width
+                wrapMode: Text.Wrap
             }
         }
 
