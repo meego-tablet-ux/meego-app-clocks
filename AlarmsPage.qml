@@ -45,8 +45,12 @@ AppPage {
 
     onActionMenuTriggered: {
         if (selectedItem == 1) {
-            __alarmItem = newAlarmComponent.createObject(alarmsPage);
-            __alarmItem.show();
+            if (clockListModel.count >= 20) {
+                toomanyAlarmsDialog.show();
+            } else {
+                __alarmItem = newAlarmComponent.createObject(alarmsPage);
+                __alarmItem.show();
+            }
         }
     }
 
@@ -217,4 +221,16 @@ AppPage {
         acceptButtonImagePressed: "image://themedimage/widgets/common/button/button-negative-pressed"
         onAccepted: __alarmItem.show()
     }
+
+    ModalMessageBox {
+        id: toomanyAlarmsDialog
+        property string city
+        width: 400
+        height: 250
+        title: qsTr("Error")
+        text: Strings.string04.arg(20)
+        showAcceptButton: false
+        cancelButtonText: qsTr("Cancel")
+    }
+
 }

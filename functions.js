@@ -41,7 +41,7 @@ function daysFriendly(days)
         if(days&(1<<idx))
         {
             if(cnt > 0)
-                res += ",";
+                res += ", ";
             res += weekdayShort[idx];
             cnt++;
         }
