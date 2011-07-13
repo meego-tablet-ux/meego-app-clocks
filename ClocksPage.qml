@@ -9,6 +9,7 @@
 import Qt 4.7
 import MeeGo.Components 0.1
 import MeeGo.App.Clocks 0.1
+import "strings.js" as Strings
 
 AppPage {
     id: clocksPage
@@ -20,8 +21,12 @@ AppPage {
     actionMenuPayload: [1]
     onActionMenuTriggered: {
         if (selectedItem == 1) {
-            __clockItem = newClockComponent.createObject(clocksPage);
-            __clockItem.show();
+            if (clockListModel.count >= 20) {
+                toomanyClocksDialog.show();
+            } else {
+                __clockItem = newClockComponent.createObject(clocksPage);
+                __clockItem.show();
+            }
         }
     }
 
@@ -171,6 +176,17 @@ AppPage {
         height: 250
         title: qsTr("Error")
         text: qsTr("You've already got a clock for %1.").arg(city)
+        showAcceptButton: false
+        cancelButtonText: qsTr("Cancel")
+    }
+
+    ModalMessageBox {
+        id: toomanyClocksDialog
+        property string city
+        width: 400
+        height: 250
+        title: qsTr("Error")
+        text: Strings.string01.arg(20)
         showAcceptButton: false
         cancelButtonText: qsTr("Cancel")
     }
