@@ -13,7 +13,8 @@ CONFIG += qt \
 PKGCONFIG += gconf-2.0 \
     libekcal \
     connman-qt4 \
-    icu-i18n icu-uc
+    icu-i18n icu-uc \
+    mlite
 TARGET = $$qtLibraryTarget($$TARGET)
 DESTDIR = $$TARGET
 OBJECTS_DIR = .obj
@@ -22,12 +23,14 @@ MOC_DIR = .moc
 # Input
 SOURCES += clocks.cpp \
     clockitem.cpp \
-    clocklistmodel.cpp
+    clocklistmodel.cpp \
+    alarmsoundsmodel.cpp
 OTHER_FILES += \
     qmldir
 HEADERS += clocks.h \
     clockitem.h \
-    clocklistmodel.h
+    clocklistmodel.h \
+    alarmsoundsmodel.h
 
 qmlfiles.files += *.qml *.js i18n
 qmlfiles.path += $$INSTALL_ROOT/usr/share/$$PROJECT_NAME

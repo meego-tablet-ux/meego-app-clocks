@@ -8,10 +8,12 @@
 
 #include "clocks.h"
 #include "clocklistmodel.h"
+#include "alarmsoundsmodel.h"
 
 void clocks::registerTypes(const char *uri)
 {
     qmlRegisterType<ClockListModel>(uri, 0, 0, "ClockListModel");
+    qmlRegisterType<AlarmSoundsModel>(uri, 0, 0, "AlarmSoundsModel");
 }
 
 Q_EXPORT_PLUGIN(clocks);

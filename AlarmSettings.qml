@@ -202,20 +202,15 @@ Column {
             height: 45
             titleColor: "black"
             replaceDropDownTitle: true
-            model: ["Blurp",
-                    "ChordUp",
-                    "ChordDown",
-                    "ChimeUp",
-                    "ChimeDown"]
-            //FIXME: need meego alarm sounds
+            model: alarmSoundsModel.soundNames
+            payload: alarmSoundsModel.soundFiles
             Component.onCompleted: {
-                if (a_soundname == "ChordUp") selectedIndex = 1;
-                else if (a_soundname == "ChordDown") selectedIndex = 2;
-                else if (a_soundname == "ChimeUp") selectedIndex = 3;
-                else if (a_soundname == "ChimeDown") selectedIndex = 4;
-                else selectedIndex = 0;
+                selectedIndex = alarmSoundsModel.getIndexByFile(a_sounduri);
             }
-            onSelectedIndexChanged: a_soundname = model[selectedIndex]
+            onSelectedIndexChanged: {
+                a_soundname = model[selectedIndex];
+                a_sounduri = payload[selectedIndex];
+            }
         }
         visible: a_soundtype == 0
     }

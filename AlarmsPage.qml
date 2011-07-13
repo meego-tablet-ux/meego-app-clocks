@@ -23,6 +23,8 @@ AppPage {
     actionMenuModel: [qsTr("New alarm")]
     actionMenuPayload: [1]
 
+    AlarmSoundsModel { id: alarmSoundsModel }
+
     SaveRestoreState {
         id: alarmsPageState
         onSaveRequired: {
