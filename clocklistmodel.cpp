@@ -208,7 +208,7 @@ QList<ClockItem *> ClockListModel::getAlarmsFromCalendar() const
         int snooze = alarm->snoozeTime().asSeconds()/60;
         bool active = alarm->enabled();
         QTime thetime = alarm->time().toLocalZone().time();
-        int hour = thetime.hour() + 1;
+        int hour = thetime.hour();
         int minute = thetime.minute();
 
         newItemsList << new ClockItem(name, days, soundtype, soundname, soundfile, snooze, active, hour, minute, uid);
@@ -318,7 +318,7 @@ QString ClockListModel::calendarAlarm(const QString &name, const int days,
     eventAlarm->setSnoozeTime( KCalCore::Duration( 60*snooze ) );
     eventAlarm->setRepeatCount(10);
     KDateTime thetime = KDateTime::currentDateTime(KDateTime::Spec(KSystemTimeZones::local()));
-    thetime.setTime(QTime(hour-1, minute, 0, 0));
+    thetime.setTime(QTime(hour, minute, 0, 0));
     eventAlarm->setTime(thetime);
     eventAlarm->setEnabled(active);
     coreEvent->addAlarm( eventAlarm );
