@@ -206,6 +206,8 @@ Column {
             payload: alarmSoundsModel.soundFiles
             Component.onCompleted: {
                 selectedIndex = alarmSoundsModel.getIndexByFile(a_sounduri);
+                a_soundname = model[selectedIndex];
+                a_sounduri = payload[selectedIndex];
             }
             onSelectedIndexChanged: {
                 a_soundname = model[selectedIndex];
