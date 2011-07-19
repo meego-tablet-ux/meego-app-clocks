@@ -28,10 +28,10 @@ QStringList AlarmSoundsModel::soundNames() const
 QStringList AlarmSoundsModel::soundFiles() const
 {
     QStringList defaults;
-    defaults << "/usr/share/sounds/meego/stereo/ring-1.wav"
-             << "/usr/share/sounds/meego/stereo/ring-2.wav"
-             << "/usr/share/sounds/meego/stereo/ring-3.wav"
-             << "/usr/share/sounds/meego/stereo/ring-4.wav";
+    defaults << "file:///usr/share/sounds/meego/stereo/ring-1.wav"
+             << "file:///usr/share/sounds/meego/stereo/ring-2.wav"
+             << "file:///usr/share/sounds/meego/stereo/ring-3.wav"
+             << "file:///usr/share/sounds/meego/stereo/ring-4.wav";
     if (mAlarmSoundsConf->value().type() != QVariant::StringList ||
             mAlarmSoundsConf->value().toStringList().size() < 1) {
         return defaults;
