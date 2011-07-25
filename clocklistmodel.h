@@ -15,6 +15,7 @@
 #include <QSettings>
 #include <ekcal/ekcal-storage.h>
 #include "clockitem.h"
+#include "meegolocale.h"
 
 class ClockListModel: public QAbstractListModel, public eKCal::StorageObserver
 {
@@ -96,6 +97,7 @@ protected:
     bool m_initialized;
     eKCal::EStorage::Ptr m_storage;
     KCalCore::Calendar::Ptr m_calendar;
+    meego::Locale mLocale;
 };
 
 #endif // CLOCKLISTMODEL_H

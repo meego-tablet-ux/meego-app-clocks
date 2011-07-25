@@ -11,6 +11,7 @@
 #include <QtDBus/QtDBus>
 #include <kcalcoren/ksystemtimezone.h>
 #include <unicode/timezone.h>
+#include <unicode/locid.h>
 #include <clockmodel.h>
 #include "clocklistmodel.h"
 
@@ -132,6 +133,8 @@ void ClockListModel::setType(const int type)
             newItemsList << new ClockItem(name, title, gmt);
         }
         settings.endGroup();
+        // force reload when locale changes to get new timezone names
+        connect(&mLocale, SIGNAL(localeChanged()), this, SIGNAL(modelReset()));
     }
     else if(m_type == ListofAlarms)
     {
@@ -543,7 +546,7 @@ QVariant ClockListModel::data(const QModelIndex &index, int role) const
         if (m_type == ListofClocks) {
             TimeZone *zone = TimeZone::createTimeZone(UnicodeString(static_cast<const UChar*>(item->m_title.utf16())));
             UnicodeString result;
-            zone->getDisplayName(TRUE, TimeZone::GENERIC_LOCATION, result);
+            zone->getDisplayName(TRUE, TimeZone::GENERIC_LOCATION, Locale(mLocale.locale().toAscii().constData()), result);
             delete zone;
             return QString(reinterpret_cast<const QChar*>(result.getBuffer()), result.length());
         } else {
@@ -554,7 +557,7 @@ QVariant ClockListModel::data(const QModelIndex &index, int role) const
     if (role == ClockItem::GMTName) {
         TimeZone *zone = TimeZone::createTimeZone(UnicodeString(static_cast<const UChar*>(item->m_title.utf16())));
         UnicodeString result;
-        zone->getDisplayName(TRUE, TimeZone::LONG_GMT, result);
+        zone->getDisplayName(TRUE, TimeZone::LONG_GMT, Locale(mLocale.locale().toAscii().constData()), result);
         delete zone;
         return QString(reinterpret_cast<const QChar*>(result.getBuffer()), result.length());
     }
